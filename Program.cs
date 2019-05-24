@@ -11,10 +11,12 @@ namespace BeliefEngine
             while(true){
                 switch(menuOption(options)){
                     case 1:
-                
+
                     break;
                     case 2:
-
+                        Console.WriteLine("Please enter a logic sentence: "+Environment.NewLine);
+                        string val = Console.ReadLine();
+                        Sentence test = new Sentence(val);
                     break;
                     default:
                         return;

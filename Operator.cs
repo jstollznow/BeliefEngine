@@ -1,7 +1,9 @@
-class Operator{
-    string operation;
-    Operator(string val)
+public class Operator{
+    string opName;
+    string op;
+    public Operator(string val)
     {
+        this.op = val;
         // ~ not
         // && ..and..
         // || ..or..
@@ -9,27 +11,30 @@ class Operator{
         // <-> biconditional
         if (val == "~")
         {
-            this.operation="not";
+            this.opName ="not";
         }
         else if (val == "&&")
         {
-            this.operation = "and";
+            this.opName = "and";
         }
         else if (val == "||")
         {
-            this.operation = "or";
+            this.opName = "or";
         }
         else if (val == "->")
         {
-            this.operation = "implication";
+            this.opName = "implication";
         }
         else if (val == "<->")
         {
-            this.operation = "biconditional";
+            this.opName = "biconditional";
         }
         else
         {
-            this.operation = "invalid";
+            this.opName = "invalid";
         }
+    }
+    public string printString(){
+        return op;
     }
 }

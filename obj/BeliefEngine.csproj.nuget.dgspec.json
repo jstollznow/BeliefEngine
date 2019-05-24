@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Documents\\DTU\\Sem2\\Artificial Intelligence\\BeliefEngine\\BeliefEngine.csproj": {}
+    "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\BeliefEngine.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Documents\\DTU\\Sem2\\Artificial Intelligence\\BeliefEngine\\BeliefEngine.csproj": {
+    "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\BeliefEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Documents\\DTU\\Sem2\\Artificial Intelligence\\BeliefEngine\\BeliefEngine.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\BeliefEngine.csproj",
         "projectName": "BeliefEngine",
-        "projectPath": "C:\\Users\\User\\Documents\\DTU\\Sem2\\Artificial Intelligence\\BeliefEngine\\BeliefEngine.csproj",
+        "projectPath": "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\BeliefEngine.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Documents\\DTU\\Sem2\\Artificial Intelligence\\BeliefEngine\\obj\\",
+        "outputPath": "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
