@@ -17,11 +17,13 @@ public class Sentence{
     public Sentence(string input)
     {
         this.input = input;
-        sentenceSplit();
+        bracketSplit();
+        operatorSplit();
+        propSplit();
         // Sentence()
         Console.WriteLine(this.printString());
     }
-    public void sentenceSplit()
+    public void bracketSplit()
     {
         int lCount = 0;
         int lLast = 0;
@@ -62,26 +64,36 @@ public class Sentence{
             }
             
         }
+    }
+    public void operatorSplit()
+    {
         int opStart = -1;
         int opEnd = -1;
-        for(int count = 0; count < input.Length; count++)
+        for (int count = 0; count < input.Length; count++)
         {
-            if(char.IsLetter(input[count]) == false){
+            if (char.IsLetter(input[count]) == false)
+            {
                 if (opStart == -1)
                 {
-                    opStart = count;   
+                    opStart = count;
                 }
             }
             else
             {
                 if (opStart != -1)
                 {
-                    
+                    a = new Sentence(input.Substring(0, opStart));
+                    join = new Operator(input.Substring(opStart, count - opStart - 1));
+                    b = new Sentence(input.Substring(count));
+                    break;
                 }
             }
         }
     }
-    public string printString(){
+    public void propSplit(){
+        a = new Proposition(false,input);
+    }
+    public virtual string printString(){
         string sent = null;
         if (b!=null){
             sent = "(" + a.printString() + ")" + join.printString() + "(" + b.printString() + ")";
