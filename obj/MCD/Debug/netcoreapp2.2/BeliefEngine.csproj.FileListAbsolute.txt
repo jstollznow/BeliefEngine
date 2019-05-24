@@ -1,0 +1,11 @@
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\bin\MCD\Debug\netcoreapp2.2\BeliefEngine.deps.json
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\bin\MCD\Debug\netcoreapp2.2\BeliefEngine.runtimeconfig.json
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\bin\MCD\Debug\netcoreapp2.2\BeliefEngine.runtimeconfig.dev.json
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\bin\MCD\Debug\netcoreapp2.2\BeliefEngine.dll
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\bin\MCD\Debug\netcoreapp2.2\BeliefEngine.pdb
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\obj\MCD\Debug\netcoreapp2.2\BeliefEngine.csprojAssemblyReference.cache
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\obj\MCD\Debug\netcoreapp2.2\BeliefEngine.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\obj\MCD\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfoInputs.cache
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\obj\MCD\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfo.cs
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\obj\MCD\Debug\netcoreapp2.2\BeliefEngine.dll
+C:\Users\User\Documents\DTU\Sem2\Artificial Intelligence\BeliefEngine\obj\MCD\Debug\netcoreapp2.2\BeliefEngine.pdb
