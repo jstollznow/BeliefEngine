@@ -196,5 +196,6 @@ public class Sentence{
         // sentences made up of clauses and && operator
         // Clauses only use or
         
+        
     }
 }

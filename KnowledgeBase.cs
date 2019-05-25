@@ -17,6 +17,10 @@ public class KnowledgeBase{
     public Sentence ASK(){
         return null;
     }
+
+    public void checkTruthValue(Sentence newSentence) {
+        newSentence.getValue();
+    }
     private void checkValidity(Sentence newSentence){
 
     }
@@ -28,4 +32,9 @@ public class KnowledgeBase{
             Console.WriteLine(i.ToString()+". "+ kBase[i].printString());
         }
     }
+
+    bool[][] truthTable = new bool[][] {
+        
+    }
+    
 }
