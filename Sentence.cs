@@ -151,24 +151,25 @@ public class Sentence{
         for (int i = 0; i < joins.Count; i ++)
         {
             string firstSub = subSentences[i].printString();
-            if (firstSub.Length <= 2)
-            {
-                sent = sent + firstSub + joins[i].printString();
-            }
-            else
-            {
-                sent = sent + "(" + firstSub + ")" + joins[i].printString();
-            }
+            sent = sent + firstSub + joins[i].printString();
+            // if (firstSub.Length <= 2)
+            // {
+            //     sent = sent + firstSub + joins[i].printString();
+            // }
+            // else
+            // {
+            //     sent = sent + "(" + firstSub + ")" + joins[i].printString();
+            // }
         }
         string lastSub = subSentences[subSentences.Count - 1].printString();
-        if (lastSub.Length <= 2 || subSentences.Count == 1)
-        {
-            sent = sent + lastSub;
-        }
-        else
-        {
-            sent = sent + "(" + lastSub + ")";
-        }
+        sent = sent + lastSub;
+        // if (lastSub.Length <= 2 || subSentences.Count == 1)
+        // {
+        // }
+        // else
+        // {
+        //     sent = sent + "(" + lastSub + ")";
+        // }
         if (this.hasBrackets == true)
         {
             sent = sent + ")";
