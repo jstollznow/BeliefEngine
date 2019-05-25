@@ -19,4 +19,6 @@ public static class GlobalProps
             props[i].Value = values[i];
         }
     }
+    // these functions and this class is used for the letters in the sentences
+    
 }

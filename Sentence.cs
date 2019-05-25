@@ -6,6 +6,7 @@ public class Sentence{
     List<Operator> joins = new List<Operator>();
 
     bool not;
+    
     bool nextNotVal = false;
     bool hasBrackets = false;
     string input;
@@ -190,5 +191,10 @@ public class Sentence{
         {
             return carry;
         }
+    }
+    public void toCNF(){
+        // sentences made up of clauses and && operator
+        // Clauses only use or
+        
     }
 }
