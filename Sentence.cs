@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using static GlobalProps;
 public class Sentence{
     List<Sentence> subSentences = new List<Sentence>();
     List<Operator> joins = new List<Operator>();
+
+    
     string input;
     public Sentence(string input)
     {
@@ -10,7 +13,7 @@ public class Sentence{
         smartSort();
     }
     public Sentence(){}
-    public void smartSort()
+    public bool smartSort()
     {
         int i = 0;
         if (input != null)
@@ -45,19 +48,35 @@ public class Sentence{
                     if (i == -1)
                     {
                         Console.WriteLine("This sentence is invalid");
-                        return;
+                        return false;
                     }
                 }
                 else
                 {
                     // if char is a letter, add a subsetence which is a proposition
-                    subSentences.Add(new Proposition(input[i]));
+                    Proposition newProp = null;
+                    
+                    for (int j = 0; j < props.Count; j++)
+                    {
+                        if (props[j].Name==input[i])
+                        {
+                            newProp = props[j];
+                        }
+                    }
+                    if (newProp == null)
+                    {
+                        newProp = new Proposition(input[i]);
+                        props.Add(newProp);
+                    }
+
+                    subSentences.Add(newProp);
                     i = i + 1;
                 }
 
             }
 
         }
+        return true;
     }
     
     public int bracket(int start)
@@ -105,5 +124,13 @@ public class Sentence{
         }
         sent = sent + "(" + subSentences[subSentences.Count-1].printString() + ")";
         return sent;
+    }
+    public virtual bool getValue(){
+        bool carry = subSentences[0].getValue();
+        for (int i = 0; i < joins.Count; i++)
+        {
+            carry = joins[i].operate(carry ,subSentences[i+1].getValue());
+        }
+        return carry;
     }
 }

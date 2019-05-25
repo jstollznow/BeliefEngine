@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using static GlobalProps;
 
 namespace BeliefEngine
 {
@@ -8,6 +10,7 @@ namespace BeliefEngine
         {
             string[] options={"Print belief base",
             "Enter logic sentence", "Exit"};
+            props = new List<Proposition>();
             while(true){
                 switch(menuOption(options))
                 {
@@ -18,7 +21,13 @@ namespace BeliefEngine
                         Console.WriteLine("Please enter a logic sentence: "+Environment.NewLine);
                         string val = Console.ReadLine();
                         Sentence test = new Sentence(val);
-                        Console.WriteLine(test.printString());
+                        KnowledgeBase ME = new KnowledgeBase("Jacob");
+                        ME.TELL(test);
+                        ME.listSentences();
+                        bool[] propValues = new bool[] { true, true };
+                        setPropositions(propValues);
+                        Console.WriteLine("When " + propositions() + " are equal to " + 
+                        propValues.GetValue(0) + " and " + propValues.GetValue(1) + ". Test is " + test.getValue());
                     break;
                     default:
                         return;
