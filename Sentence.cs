@@ -7,6 +7,7 @@ public class Sentence{
 
     bool not;
     bool nextNotVal = false;
+    bool hasBrackets = false;
     string input;
 
     public bool Not { get => not; set => not = value; }
@@ -15,6 +16,7 @@ public class Sentence{
     {
         this.input = input;
         this.Not = not;
+        this.hasBrackets = false;
         smartSort();
     }
     public Sentence(){}
@@ -123,8 +125,10 @@ public class Sentence{
                 if (lCount == rCount)
                 {
                     // make sub-sentence
-                    subSentences.Add(new Sentence(
-                        input.Substring(lFirst + 1,rLast - lFirst - 1),nextNotVal));
+                    Sentence bracketSentence = new Sentence(input.Substring(lFirst + 1, 
+                    rLast - lFirst - 1), nextNotVal);
+                    bracketSentence.hasBrackets = true; 
+                    subSentences.Add(bracketSentence);
                     return (rLast + 1);
                 }
 
@@ -141,6 +145,9 @@ public class Sentence{
         {
             sent = sent + "~";
         }
+        if (this.hasBrackets==true){
+            sent = sent + "(";
+        }
         for (int i = 0; i < joins.Count; i ++)
         {
             string firstSub = subSentences[i].printString();
@@ -154,13 +161,17 @@ public class Sentence{
             }
         }
         string lastSub = subSentences[subSentences.Count - 1].printString();
-        if (lastSub.Length <= 2)
+        if (lastSub.Length <= 2 || subSentences.Count == 1)
         {
             sent = sent + lastSub;
         }
         else
         {
             sent = sent + "(" + lastSub + ")";
+        }
+        if (this.hasBrackets == true)
+        {
+            sent = sent + ")";
         }
         return sent;
     }
