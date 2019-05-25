@@ -24,7 +24,7 @@ namespace BeliefEngine
                         KnowledgeBase ME = new KnowledgeBase("Jacob");
                         ME.TELL(test);
                         ME.listSentences();
-                        bool[] propValues = new bool[] { true, true };
+                        bool[] propValues = new bool[] {true, true};
                         setPropositions(propValues);
                         Console.WriteLine("When " + propositions() + " are equal to " + 
                         propValues.GetValue(0) + " and " + propValues.GetValue(1) + ". Test is " + test.getValue());

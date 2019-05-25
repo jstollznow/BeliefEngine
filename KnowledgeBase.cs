@@ -2,8 +2,10 @@ using System;
 
 using System.Collections.Generic;
 
+using static GlobalProps;
 public class KnowledgeBase{
     List<Sentence> kBase = new List<Sentence>();
+    List<Proposition> kProps = new List<Proposition>();
     string name;
     public KnowledgeBase(string name){
         this.name = name;

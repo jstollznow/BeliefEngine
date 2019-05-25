@@ -11,11 +11,11 @@ public class Proposition:Sentence{
 
     public override string printString()
     {
-        return name.ToString();
+        return this.Name.ToString();
     }
 
     public override bool getValue()
     {
-        return this.Value;
+       return this.Value;
     }
 }

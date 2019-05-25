@@ -5,16 +5,43 @@ public class Sentence{
     List<Sentence> subSentences = new List<Sentence>();
     List<Operator> joins = new List<Operator>();
 
-    
+    bool not;
+    bool nextNotVal = false;
     string input;
-    public Sentence(string input)
+
+    public bool Not { get => not; set => not = value; }
+
+    public Sentence(string input, bool not = false)
     {
         this.input = input;
+        this.Not = not;
         smartSort();
     }
     public Sentence(){}
+    public Sentence(char propName, bool not)
+    {
+        this.Not = not;
+        Proposition newProp = null;
+        for (int j = 0; j < props.Count; j++)
+        {
+            if (props[j].Name == propName)
+            {
+                newProp = props[j];
+            }
+        }
+        if (newProp == null)
+        {
+            newProp = new Proposition(propName);
+            nextNotVal = false;
+            props.Add(newProp);
+        }
+        subSentences.Add(newProp);
+
+
+    }
     public bool smartSort()
     {
+        
         int i = 0;
         if (input != null)
         {
@@ -26,7 +53,8 @@ public class Sentence{
                     {
                         // declares everything in the brackets as a new sentence
                         case '(':
-                            i = bracket(i);
+                            i = bracket(i,nextNotVal);
+                            nextNotVal = true;
                             break;
                         // handles operators (all two characters long)
                         case '&':
@@ -34,7 +62,7 @@ public class Sentence{
                         case '<':
                         case '|':
                             joins.Add(new Operator(input.Substring(i,2)));
-                            if (joins[joins.Count-1].OpName=="invalid")
+                            if (joins[joins.Count-1].OpName == "invalid")
                             {
                                 i = -1;
                             }
@@ -44,6 +72,11 @@ public class Sentence{
                             }
                             break;
                         // still need to manage negation!
+                        case '~':
+                            // not
+                            nextNotVal = true;
+                            i ++;
+                            break;
                     }
                     if (i == -1)
                     {
@@ -54,22 +87,8 @@ public class Sentence{
                 else
                 {
                     // if char is a letter, add a subsetence which is a proposition
-                    Proposition newProp = null;
-                    
-                    for (int j = 0; j < props.Count; j++)
-                    {
-                        if (props[j].Name==input[i])
-                        {
-                            newProp = props[j];
-                        }
-                    }
-                    if (newProp == null)
-                    {
-                        newProp = new Proposition(input[i]);
-                        props.Add(newProp);
-                    }
-
-                    subSentences.Add(newProp);
+                    subSentences.Add(new Sentence(input[i],nextNotVal));
+                    nextNotVal = false;
                     i = i + 1;
                 }
 
@@ -79,7 +98,7 @@ public class Sentence{
         return true;
     }
     
-    public int bracket(int start)
+    public int bracket(int start,bool nextNotVal)
     // handles finding the subsentence where brackets are used or required
     {
         int lCount = 1;
@@ -93,11 +112,11 @@ public class Sentence{
                 switch (input[i])
                 {
                     case '(':
-                        lCount++;
+                        lCount ++;
                         break;
                     case ')':
-                        rCount++;
-                        rLast=i;
+                        rCount ++;
+                        rLast = i;
                         break;
 
                 }
@@ -105,7 +124,7 @@ public class Sentence{
                 {
                     // make sub-sentence
                     subSentences.Add(new Sentence(
-                        input.Substring(lFirst + 1,rLast - lFirst - 1)));
+                        input.Substring(lFirst + 1,rLast - lFirst - 1),nextNotVal));
                     return (rLast + 1);
                 }
 
@@ -118,11 +137,31 @@ public class Sentence{
     public virtual string printString()
     {
         string sent = null;
+        if (this.not == true)
+        {
+            sent = sent + "~";
+        }
         for (int i =0; i < joins.Count; i ++)
         {
-            sent = sent + "(" + subSentences[i].printString() + ")" + joins[i].printString();
+            string firstSub = subSentences[i].printString();
+            if (firstSub.Length==1)
+            {
+                sent = sent + firstSub + joins[i].printString();
+            }
+            else
+            {
+                sent = sent + "(" + firstSub + ")" + joins[i].printString();
+            }
         }
-        sent = sent + "(" + subSentences[subSentences.Count-1].printString() + ")";
+        string lastSub = subSentences[subSentences.Count - 1].printString();
+        if (lastSub.Length == 1)
+        {
+            sent = sent + lastSub;
+        }
+        else
+        {
+            sent = sent + "(" + lastSub + ")";
+        }
         return sent;
     }
     public virtual bool getValue(){
@@ -131,6 +170,13 @@ public class Sentence{
         {
             carry = joins[i].operate(carry ,subSentences[i+1].getValue());
         }
-        return carry;
+        if (this.not == true)
+        {
+            return !carry;
+        }
+        else 
+        {
+            return carry;
+        }
     }
 }
