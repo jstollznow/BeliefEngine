@@ -8,33 +8,37 @@ public class Operator{
         // && ..and..
         // || ..or..
         // -> implication
-        // <-> biconditional
+        // <> biconditional
         if (val == "~")
         {
-            this.opName ="not";
+            this.OpName ="not";
         }
         else if (val == "&&")
         {
-            this.opName = "and";
+            this.OpName = "and";
         }
         else if (val == "||")
         {
-            this.opName = "or";
+            this.OpName = "or";
         }
         else if (val == "->")
         {
-            this.opName = "implication";
+            this.OpName = "implication";
         }
-        else if (val == "<->")
+        else if (val == "<>")
         {
-            this.opName = "biconditional";
+            this.OpName = "biconditional";
         }
         else
         {
-            this.opName = "invalid";
+            this.OpName = "invalid";
         }
     }
-    public string printString(){
+
+    public string OpName { get => opName; set => opName = value; }
+
+    public string printString()
+    {
         return op;
     }
 }
