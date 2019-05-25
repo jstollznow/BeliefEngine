@@ -54,7 +54,7 @@ public class Sentence{
                         // declares everything in the brackets as a new sentence
                         case '(':
                             i = bracket(i,nextNotVal);
-                            nextNotVal = true;
+                            nextNotVal = false;
                             break;
                         // handles operators (all two characters long)
                         case '&':
@@ -141,10 +141,10 @@ public class Sentence{
         {
             sent = sent + "~";
         }
-        for (int i =0; i < joins.Count; i ++)
+        for (int i = 0; i < joins.Count; i ++)
         {
             string firstSub = subSentences[i].printString();
-            if (firstSub.Length==1)
+            if (firstSub.Length <= 2)
             {
                 sent = sent + firstSub + joins[i].printString();
             }
@@ -154,7 +154,7 @@ public class Sentence{
             }
         }
         string lastSub = subSentences[subSentences.Count - 1].printString();
-        if (lastSub.Length == 1)
+        if (lastSub.Length <= 2)
         {
             sent = sent + lastSub;
         }
