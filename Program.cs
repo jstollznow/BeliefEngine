@@ -17,6 +17,7 @@ namespace BeliefEngine
                         Console.WriteLine("Please enter a logic sentence: "+Environment.NewLine);
                         string val = Console.ReadLine();
                         Sentence test = new Sentence(val);
+                        Console.WriteLine(test.printString());
                     break;
                     default:
                         return;
@@ -25,14 +26,18 @@ namespace BeliefEngine
 
         }
         public static int menuOption(string[] options){
-            string menu=string.Empty;
-            for(int i=0;i<options.Length;i++){
-                menu=menu+(i+1).ToString()+". "+options[i]+Environment.NewLine;
+            string menu = string.Empty;
+            for(int i = 0; i < options.Length; i++){
+                menu = menu + (i + 1).ToString()+". "+options[i] + Environment.NewLine;
             }
-            menu=menu+"Please select an option, (1,2,...)"+Environment.NewLine;
+            menu = menu + "Please select an option, (1,2,...): " + Environment.NewLine;
             Console.Write(menu);
             string val = Console.ReadLine();
-            int option = Convert.ToInt32(val);
+            int option;
+            while (int.TryParse(val,out option)==false){
+                 Console.WriteLine("Please enter a valid number: ");
+                 val = Console.ReadLine();   
+            }
             return option;
         }
     }
