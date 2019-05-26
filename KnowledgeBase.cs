@@ -6,19 +6,26 @@ using static GlobalProps;
 public class KnowledgeBase{
     List<Sentence> kBase = new List<Sentence>();
     List<Proposition> kProps = new List<Proposition>();
+
+    TruthTable truthTable;
     string name;
     public KnowledgeBase(string name){
         this.name = name;
+        truthTable = new TruthTable(this.kBase);
     }
 
     public void TELL(Sentence newSentence){
-        kBase.Add(newSentence);
+        if (isValid(newSentence))
+        {
+            kBase.Add(newSentence);
+            
+        }
     }
     public Sentence ASK(){
         return null;
     }
-    private void checkValidity(Sentence newSentence){
-
+    private bool isValid(Sentence newSentence){
+        return false;
     }
     public void listSentences()
     {

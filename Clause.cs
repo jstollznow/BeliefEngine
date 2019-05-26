@@ -1,6 +1,7 @@
 
 
-public class Clause{
+public class Clause
+{
     public Clause(Sentence mySentence)
     {
         // this will be a conversion from a sentence to a clause
