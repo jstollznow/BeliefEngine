@@ -5,6 +5,7 @@ public class Sentence{
     List<Sentence> subSentences = new List<Sentence>();
     List<Operator> joins = new List<Operator>();
 
+    List<Proposition> propsInSentence = new List<Proposition>();
     bool not;
     
     bool nextNotVal = false;
@@ -12,6 +13,7 @@ public class Sentence{
     string input;
 
     public bool Not { get => not; set => not = value; }
+    public List<Proposition> PropsInSentence { get => propsInSentence; set => propsInSentence = value; }
 
     public Sentence(string input, bool not = false)
     {
@@ -35,6 +37,7 @@ public class Sentence{
         if (newProp == null)
         {
             newProp = new Proposition(propName);
+            PropsInSentence.Add(newProp);
             nextNotVal = false;
             props.Add(newProp);
         }
@@ -153,24 +156,9 @@ public class Sentence{
         {
             string firstSub = subSentences[i].printString();
             sent = sent + firstSub + joins[i].printString();
-            // if (firstSub.Length <= 2)
-            // {
-            //     sent = sent + firstSub + joins[i].printString();
-            // }
-            // else
-            // {
-            //     sent = sent + "(" + firstSub + ")" + joins[i].printString();
-            // }
         }
         string lastSub = subSentences[subSentences.Count - 1].printString();
         sent = sent + lastSub;
-        // if (lastSub.Length <= 2 || subSentences.Count == 1)
-        // {
-        // }
-        // else
-        // {
-        //     sent = sent + "(" + lastSub + ")";
-        // }
         if (this.hasBrackets == true)
         {
             sent = sent + ")";

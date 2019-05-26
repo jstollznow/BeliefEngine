@@ -15,7 +15,7 @@ namespace BeliefEngine
                 switch(menuOption(options))
                 {
                     case 1:
-
+                        generateBoolValues(4);
                     break;
                     case 2:
                         Console.WriteLine("Please enter a logic sentence: "+Environment.NewLine);
@@ -62,5 +62,52 @@ namespace BeliefEngine
             }
             return option;
         }
+        public static void generateBoolValues(int numProps)
+        {
+            // like a bit counter
+            List<bool[]> values = new List<bool[]>();
+            bool[] firstEntry = new bool[numProps];
+            for (int i = 0; i < numProps; i++)
+            {
+                firstEntry[i] = false;
+            }
+            values.Add(firstEntry);
+            for (int i = 1; i < Math.Pow(2, numProps); i++)
+            {
+                bool[] newEntry = new bool[numProps];
+                Array.Copy(values[i-1],newEntry,numProps);
+                // newEntry = values[i - 1];
+                if (newEntry[numProps-1])
+                {
+                    newEntry[numProps-1] = false;
+                    for (int j = 1; j >= 0; j--)
+                    {
+                        if (newEntry[j] == false)
+                        {
+                            newEntry[j] = true;
+                            for (int carry = j + 1; carry < numProps; carry++)
+                            {
+                                newEntry[carry] = false;
+                            }
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    newEntry[numProps-1] = true;
+                }
+                values.Add(newEntry);
+            }
+            for (int i = 0; i < values.Count; i++)
+            {   
+                for (int j = 0; j < numProps; j++)
+                {
+                    Console.Write(values[i][j] + " ");
+                }
+                Console.Write(Environment.NewLine);
+            }
+        }
     }
+    
 }
