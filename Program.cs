@@ -6,37 +6,40 @@ namespace BeliefEngine
 {
     class Program
     {
+        public static KnowledgeBase ME = new KnowledgeBase("Jacob");
         static void Main(string[] args)
         {
-            string[] options={"Print belief base",
-            "Enter logic sentence", "Exit"};
+            string[] options = {"Print belief base",
+            "Add sentence to belief base", "Entailment" ,"Exit"};
             props = new List<Proposition>();
             while(true){
                 switch(menuOption(options))
                 {
                     case 1:
-                        generateBoolValues(4);
+                        ME.listSentences();
                     break;
                     case 2:
-                        Console.WriteLine("Please enter a logic sentence: "+Environment.NewLine);
-                        string val = Console.ReadLine();
-                        Sentence test = new Sentence(val);
-                        KnowledgeBase ME = new KnowledgeBase("Jacob");
-                        ME.TELL(test);
-                        ME.listSentences();
-                        bool[] propValues = new bool[] {true, true};
-                        // propositions in globalProps are a list of letters
-                        // the letters are set in the order they are created
-                        // i.e. if you use p then q
-                        // you would send an array of 2 to setPropositions
-                        // array[0] would set p, and array[1] would set q
-                        setPropositions(propValues);
-                        Console.WriteLine("When " + propositions() + " are equal to " + 
-                        propValues.GetValue(0) + " and " + propValues.GetValue(1) + ". Test is " + test.getValue());
-                        // each sentence will account for the globally set values and return an answer
-                        // you could use this method to rotate the values and hence generate a truth table for a 
-                        // given sentence, in the knowledge base, then this truth table could be used
-                        // when trying to add a new sentence
+                        while(true)
+                        {
+                            Console.WriteLine("Please enter a logic sentence (type -1 to stop adding): " + Environment.NewLine);
+                            string input = Console.ReadLine();
+                            if (input == "-1"){break;}
+                            Sentence logicSent = new Sentence(input);
+                            ME.TELL(logicSent);
+                        }
+                    break;
+                    case 3:
+                        Console.WriteLine("Please enter a logic sentence to see if the belief base entails it: " + Environment.NewLine);
+                        string line = Console.ReadLine();
+                        Sentence entailSent = new Sentence(line);
+                        if (ME.checkEntailment(entailSent))
+                        {
+                            Console.WriteLine("The sentence is entails the belief base");
+                        }
+                        else
+                        {
+                            Console.WriteLine("The sentence does not entail the belief base.");
+                        }
                     break;
                     default:
                         return;
@@ -61,52 +64,6 @@ namespace BeliefEngine
                  val = Console.ReadLine();   
             }
             return option;
-        }
-        public static void generateBoolValues(int numProps)
-        {
-            // like a bit counter
-            List<bool[]> values = new List<bool[]>();
-            bool[] firstEntry = new bool[numProps];
-            for (int i = 0; i < numProps; i++)
-            {
-                firstEntry[i] = false;
-            }
-            values.Add(firstEntry);
-            for (int i = 1; i < Math.Pow(2, numProps); i++)
-            {
-                bool[] newEntry = new bool[numProps];
-                Array.Copy(values[i-1],newEntry,numProps);
-                // newEntry = values[i - 1];
-                if (newEntry[numProps-1])
-                {
-                    newEntry[numProps-1] = false;
-                    for (int j = 1; j >= 0; j--)
-                    {
-                        if (newEntry[j] == false)
-                        {
-                            newEntry[j] = true;
-                            for (int carry = j + 1; carry < numProps; carry++)
-                            {
-                                newEntry[carry] = false;
-                            }
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    newEntry[numProps-1] = true;
-                }
-                values.Add(newEntry);
-            }
-            for (int i = 0; i < values.Count; i++)
-            {   
-                for (int j = 0; j < numProps; j++)
-                {
-                    Console.Write(values[i][j] + " ");
-                }
-                Console.Write(Environment.NewLine);
-            }
         }
     }
     

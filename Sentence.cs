@@ -37,13 +37,14 @@ public class Sentence{
         if (newProp == null)
         {
             newProp = new Proposition(propName);
-            PropsInSentence.Add(newProp);
             nextNotVal = false;
             props.Add(newProp);
         }
+        if (PropsInSentence.Contains(newProp) == false)
+        {
+            PropsInSentence.Add(newProp);
+        }
         subSentences.Add(newProp);
-
-
     }
     public bool smartSort()
     {
@@ -99,7 +100,7 @@ public class Sentence{
                 }
 
             }
-
+            pushPropsInSentence();
         }
         return true;
     }
@@ -142,6 +143,18 @@ public class Sentence{
         return -1;
     }
 
+    public void pushPropsInSentence(){
+        foreach (Sentence sent in subSentences)
+        {
+            foreach (Proposition prop in sent.propsInSentence)
+            {
+                if (propsInSentence.Contains(prop) == false)
+                {
+                    propsInSentence.Add(prop);
+                }
+            }
+        }
+    }
     public virtual string printString()
     {
         string sent = null;

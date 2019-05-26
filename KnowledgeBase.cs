@@ -15,17 +15,38 @@ public class KnowledgeBase{
     }
 
     public void TELL(Sentence newSentence){
-        if (isValid(newSentence))
-        {
-            kBase.Add(newSentence);
-            
-        }
+        kBase.Add(newSentence);
+        Console.WriteLine("Your sentence was added to the KB");
+        // if (checkEntailment(newSentence))
+        // {
+        //     kBase.Add(newSentence);
+        //     Console.WriteLine("Your sentence was added to the KB");
+        // }
+        // else
+        // {
+        //     Console.WriteLine("Sentence did not agree with the knowledge of the agent.");
+        // }
     }
     public Sentence ASK(){
         return null;
     }
-    private bool isValid(Sentence newSentence){
-        return false;
+    public bool checkEntailment(Sentence newSentence){
+        if (kBase.Count == 0)
+        {
+            return true;
+        }
+        truthTable.GenerateTable(kBase);
+        kProps = truthTable.InvovledProps;
+        List<bool[]> criticalVals = truthTable.valuesToMatch();
+        for (int i = 0; i < criticalVals.Count; i++)
+        {
+            GlobalProps.setPropositions(criticalVals[i], kProps);
+            if (newSentence.getValue() == false)
+            {
+                return false;
+            }
+        }
+        return true;
     }
     public void listSentences()
     {

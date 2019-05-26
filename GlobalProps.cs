@@ -12,11 +12,11 @@ public static class GlobalProps
         }
         return arguements;
     }
-    public static void setPropositions(bool[] values)
+    public static void setPropositions(bool[] values,List<Proposition> selectedProps)
     {
-        for (int i = 0; i < props.Count; i++)
+        for (int i = 0; i < selectedProps.Count; i++)
         {
-            props[i].Value = values[i];
+            selectedProps[i].Value = values[i];
         }
     }
     // these functions and this class is used for the letters in the sentences
