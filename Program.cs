@@ -31,9 +31,11 @@ namespace BeliefEngine
                             if (input == "-1"){break;}
                             Sentence logicSent = new Sentence(input);
                             if (logicSent.IsValid)
-                            {   
+                            {
                                 //simplify sentence to CNF and add to KB
+                                Console.WriteLine(logicSent.printString());
                                 logicSent.simplfy();
+                                Console.WriteLine(logicSent.printString());
                                 ME.TELL(logicSent);
                             }
                         }

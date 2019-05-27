@@ -9,6 +9,7 @@ public class Sentence{
     Sentence parent;
     List<Proposition> propsInSentence = new List<Proposition>();
     bool not;
+
     bool isValid;
     bool nextNotVal = false;
     bool hasBrackets = false;
@@ -177,8 +178,9 @@ public class Sentence{
         return -1;
     }
 
+    private void pushPropsInSentence()
     // Move sentences into brackets
-    private void pushPropsInSentence(){
+    {
         foreach (Sentence sent in subSentences)
         {
             foreach (Proposition prop in sent.propsInSentence)
@@ -200,8 +202,8 @@ public class Sentence{
             subSentences = sent.subSentences;
         }
     }
-    //Verify location of operators
     private int operatorCheck(int i)
+    //Verify location of operators
     {
         int orginalPos = i;
         // check before operator
@@ -242,8 +244,8 @@ public class Sentence{
         return i;
     }
 
-    //Check is a proposition is negative
     private int negCheck(int i)
+    //Check is a proposition is negative
     {
         int orginalPos = i;
         i--;
@@ -300,8 +302,8 @@ public class Sentence{
         return i;
     }
 
-    // Outputs the propositional sentence as a string so it can be printed
     public virtual string printString()
+    // Outputs the propositional sentence as a string so it can be printed
     {
         string sent = null;
         if (this.not == true)
@@ -325,8 +327,9 @@ public class Sentence{
         return sent;
     }
 
+    public virtual bool getValue()
     // Returns if a value is true or false
-    public virtual bool getValue(){
+    {
         bool carry = subSentences[0].getValue();
         for (int i = 0; i < joins.Count; i++)
         {
@@ -342,21 +345,31 @@ public class Sentence{
         }
     }
     
-    //Converts a sentence to conjunctive normal form
     public void simplfy()
+    //Converts a sentence to conjunctive normal form
     {
         for (int jIndex = 0; jIndex < joins.Count; jIndex++)
         {
-            convertBiconditional();
-            convertImplication();
-            
+            if (joins[jIndex].Op =="<>")
+            {
+                convertBiconditional();
+            }
+            else if (joins[jIndex].Op == "->")
+            {
+                convertImplication();
+            }
         }
+        if (applyDeMorgans())
+        {
+            DeMorgans();
+        }
+        for (int sIndex = 0; sIndex < subSentences.Count; sIndex++)
+        {
+            subSentences[sIndex].simplfy();
+        }
+        // Console.WriteLine(printString());
         // DeMorgans();
-        Console.WriteLine(printString());
-        DeMorgans();
-        // commutativity();
-        // distributivity("||","&&");
-        Console.WriteLine(printString());
+        // Console.WriteLine(printString());
     }
     private void convertImplication()
     {
@@ -481,5 +494,14 @@ public class Sentence{
                 return;
             }
         }
+    }
+
+    private bool applyDeMorgans()
+    {
+        if (not && subSentences.Count > 1)
+        {
+            return true;
+        }
+        return false;
     }
 }
