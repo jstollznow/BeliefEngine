@@ -1,7 +1,7 @@
 public class Proposition:Sentence{
     bool value;
     char name;
-    public Proposition(char input):base()
+    public Proposition(char input, Sentence parent):base(parent)
     {
         this.name = input;
     }

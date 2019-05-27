@@ -4,7 +4,7 @@ using static GlobalProps;
 public class Sentence{
     List<Sentence> subSentences = new List<Sentence>();
     List<Operator> joins = new List<Operator>();
-
+    Sentence parent;
     List<Proposition> propsInSentence = new List<Proposition>();
     bool not;
 
@@ -18,18 +18,23 @@ public class Sentence{
     public List<Proposition> PropsInSentence { get => propsInSentence; set => propsInSentence = value; }
     public bool IsValid { get => isValid; set => isValid = value; }
 
-    public Sentence(string input, bool not = false)
+    public Sentence(string input, bool not = false, Sentence parent = null)
     {
         this.input = input;
         this.Not = not;
         this.hasBrackets = false;
+        this.parent = parent;
         IsValid = smartSort();
     }
-    public Sentence(){}
-    public Sentence(char propName, bool not)
+    public Sentence(Sentence parent)
+    {
+        this.parent = parent;
+    }
+    public Sentence(char propName, bool not, Sentence parent)
     {
         this.Not = not;
         Proposition newProp = null;
+        this.parent = parent;
         for (int j = 0; j < props.Count; j++)
         {
             if (props[j].Name == propName)
@@ -39,7 +44,7 @@ public class Sentence{
         }
         if (newProp == null)
         {
-            newProp = new Proposition(propName);
+            newProp = new Proposition(propName, this);
             nextNotVal = false;
             props.Add(newProp);
         }
@@ -106,7 +111,7 @@ public class Sentence{
                     if (i != -1)
                     {
                         // if char is a letter, add a subsetence which is a proposition
-                        subSentences.Add(new Sentence(input[i],nextNotVal));
+                        subSentences.Add(new Sentence(input[i], nextNotVal, this));
                         nextNotVal = false;
                         i = i + 1;
                     }
@@ -150,7 +155,7 @@ public class Sentence{
                 {
                     // make sub-sentence
                     Sentence bracketSentence = new Sentence(input.Substring(lFirst + 1, 
-                    rLast - lFirst - 1), nextNotVal);
+                    rLast - lFirst - 1), nextNotVal, this);
                     bracketSentence.hasBrackets = true; 
                     subSentences.Add(bracketSentence);
                     return (rLast + 1);
@@ -322,7 +327,7 @@ public class Sentence{
     public void simplfy()
     {
         // convertImplication();
-        DeMorgans();
+        DeMorgansForward();
         Console.WriteLine(printString());
     }
     private void convertImplication()
@@ -338,7 +343,11 @@ public class Sentence{
             }
         }
     }
-    private void DeMorgans(){
+    private void associativity()
+    {
+        
+    }
+    private void DeMorgansForward(){
         if (not)
         {
             not = flip(not);
