@@ -9,6 +9,9 @@ namespace BeliefEngine
         public static KnowledgeBase ME = new KnowledgeBase("Jacob");
         static void Main(string[] args)
         {
+            Console.WriteLine(Environment.NewLine + 
+            "Welcome to the Belief Revision Engine! How may I help you?" + 
+            Environment.NewLine);
             string[] options = {"Print belief base",
             "Add sentence to belief base", "Entailment" ,"Exit"};
             props = new List<Proposition>();
@@ -21,15 +24,19 @@ namespace BeliefEngine
                     case 2:
                         while(true)
                         {
-                            Console.WriteLine("Please enter a logic sentence (type -1 to stop adding): " + Environment.NewLine);
+                            Console.WriteLine("Please enter a logic sentence (type -1 to stop adding): ");
                             string input = Console.ReadLine();
+                            Console.Write(Environment.NewLine);
                             if (input == "-1"){break;}
                             Sentence logicSent = new Sentence(input);
-                            ME.TELL(logicSent);
+                            if (logicSent.IsValid)
+                            {
+                                ME.TELL(logicSent);
+                            }
                         }
                     break;
                     case 3:
-                        Console.WriteLine("Please enter a logic sentence to see if the belief base entails it: " + Environment.NewLine);
+                        Console.WriteLine("Please enter a logic sentence: ");
                         string line = Console.ReadLine();
                         Sentence entailSent = new Sentence(line);
                         if (ME.checkEntailment(entailSent))
@@ -63,6 +70,7 @@ namespace BeliefEngine
                  Console.WriteLine("Please enter a valid number: ");
                  val = Console.ReadLine();   
             }
+            Console.Write(Environment.NewLine);
             return option;
         }
     }

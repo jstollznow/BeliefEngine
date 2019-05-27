@@ -16,16 +16,7 @@ public class KnowledgeBase{
 
     public void TELL(Sentence newSentence){
         kBase.Add(newSentence);
-        Console.WriteLine("Your sentence was added to the KB");
-        // if (checkEntailment(newSentence))
-        // {
-        //     kBase.Add(newSentence);
-        //     Console.WriteLine("Your sentence was added to the KB");
-        // }
-        // else
-        // {
-        //     Console.WriteLine("Sentence did not agree with the knowledge of the agent.");
-        // }
+        Console.WriteLine("Your sentence was added to the KB" + Environment.NewLine);
     }
     public Sentence ASK(){
         return null;
@@ -53,7 +44,12 @@ public class KnowledgeBase{
         Console.WriteLine("Knowledge Base of "+ this.name +":");
         for (int i = 0; i < kBase.Count; i++)
         {
-            Console.WriteLine(i.ToString()+". "+ kBase[i].printString());
+            Console.WriteLine((i + 1).ToString()+". "+ kBase[i].printString());
         }
+        if (kBase.Count == 0)
+        {
+            Console.WriteLine("[KB is empty]");
+        }
+        Console.Write(Environment.NewLine);
     }
 }

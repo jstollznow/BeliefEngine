@@ -7,6 +7,8 @@ public class Sentence{
 
     List<Proposition> propsInSentence = new List<Proposition>();
     bool not;
+
+    bool isValid;
     
     bool nextNotVal = false;
     bool hasBrackets = false;
@@ -14,13 +16,14 @@ public class Sentence{
 
     public bool Not { get => not; set => not = value; }
     public List<Proposition> PropsInSentence { get => propsInSentence; set => propsInSentence = value; }
+    public bool IsValid { get => isValid; set => isValid = value; }
 
     public Sentence(string input, bool not = false)
     {
         this.input = input;
         this.Not = not;
         this.hasBrackets = false;
-        smartSort();
+        IsValid = smartSort();
     }
     public Sentence(){}
     public Sentence(char propName, bool not)
@@ -68,35 +71,50 @@ public class Sentence{
                         case '-':
                         case '<':
                         case '|':
-                            joins.Add(new Operator(input.Substring(i,2)));
-                            if (joins[joins.Count-1].OpName == "invalid")
+                            i = operatorCheck(i);
+                            if (i != -1)
                             {
-                                i = -1;
-                            }
-                            else 
-                            {
-                                i = i + 2;
+                                joins.Add(new Operator(input.Substring(i,2)));
+                                if (joins[joins.Count-1].OpName == "invalid")
+                                {
+                                    i = -1;
+                                }
+                                else 
+                                {
+                                    i = i + 2;
+                                }
                             }
                             break;
                         // still need to manage negation!
                         case '~':
                             // not
-                            nextNotVal = true;
-                            i ++;
+                            i = negCheck(i);
+                            if (i != -1)
+                            {
+                                nextNotVal = true;
+                                i = i + 1;
+                            }
                             break;
-                    }
-                    if (i == -1)
-                    {
-                        Console.WriteLine("This sentence is invalid");
-                        return false;
+                        default:
+                            i = -1;
+                        break;
                     }
                 }
                 else
                 {
-                    // if char is a letter, add a subsetence which is a proposition
-                    subSentences.Add(new Sentence(input[i],nextNotVal));
-                    nextNotVal = false;
-                    i = i + 1;
+                    i = propCheck(i);
+                    if (i != -1)
+                    {
+                        // if char is a letter, add a subsetence which is a proposition
+                        subSentences.Add(new Sentence(input[i],nextNotVal));
+                        nextNotVal = false;
+                        i = i + 1;
+                    }
+                }
+                if (i == -1)
+                {
+                    Console.WriteLine("This sentence is invalid, please try again." + Environment.NewLine);
+                    return false;
                 }
 
             }
@@ -105,7 +123,7 @@ public class Sentence{
         return true;
     }
     
-    public int bracket(int start,bool nextNotVal)
+    private int bracket(int start,bool nextNotVal)
     // handles finding the subsentence where brackets are used or required
     {
         int lCount = 1;
@@ -143,7 +161,7 @@ public class Sentence{
         return -1;
     }
 
-    public void pushPropsInSentence(){
+    private void pushPropsInSentence(){
         foreach (Sentence sent in subSentences)
         {
             foreach (Proposition prop in sent.propsInSentence)
@@ -154,6 +172,104 @@ public class Sentence{
                 }
             }
         }
+    }
+
+    private int operatorCheck(int i)
+    {
+        int orginalPos = i;
+        // check before operator
+        i--;
+        if (i >= 0)
+        {
+            if ((input[i] == ')' || char.IsLetter(input[i])) == false)
+            {
+                i = -1;
+                return i;
+            }
+        }
+        else
+        {
+            // operator should never be evaluated on its own
+            i = -1;
+            return i;
+        }
+        
+        // check behind the operator
+        i = i + 3;
+        if (input.Length > i)
+        {
+            if ((input[i] == '(' || input[i] == '~' || char.IsLetter(input[i])) == false)
+            {
+                i = -1;
+                return i;
+            }
+        }
+        else
+        {
+            // operator should never be evaluated on its own
+            i = -1;
+            return i;
+        }
+
+        i = orginalPos;
+        return i;
+    }
+    private int negCheck(int i)
+    {
+        int orginalPos = i;
+        i--;
+        if (i >= 0)
+        {
+            // has to be an operator
+            if ((input[i] == '|' || input[i] == '&' || input[i] == '>' || input[i] == '~') == false)
+            {
+                i = -1;
+                return i;
+            }
+        }
+        i = i + 2;
+        if (input.Length > i)
+        {
+            if ((input[i] == '(' || input[i] == '~' || char.IsLetter(input[i])) == false)
+            {
+                i = -1;
+                return i;
+            }
+        }
+        else
+        {
+            // cannot finish a sentence w ~
+            i = -1;
+            return i;
+        }
+        i = orginalPos;
+        return i;
+    }
+
+    private int propCheck(int i)
+    {
+        int orginalPos = i;
+        i--;
+        if (i >= 0)
+        {
+            // has to be an operator
+            if (char.IsLetter(input[i]) == true)
+            {
+                i = -1;
+                return i;
+            }
+        }
+        i = i + 2;
+        if (input.Length > i)
+        {
+            if (char.IsLetter(input[i]) == true)
+            {
+                i = -1;
+                return i;
+            }
+        }
+        i = orginalPos;
+        return i;
     }
     public virtual string printString()
     {
