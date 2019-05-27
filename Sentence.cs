@@ -119,6 +119,7 @@ public class Sentence{
 
             }
             pushPropsInSentence();
+            pushSubSentence();
         }
         return true;
     }
@@ -171,6 +172,16 @@ public class Sentence{
                     propsInSentence.Add(prop);
                 }
             }
+        }
+    }
+    private void pushSubSentence()
+    {
+        if (subSentences.Count == 1 && subSentences[0].GetType() != typeof(Proposition))
+        {
+            Sentence sent = subSentences[0];
+            joins = subSentences[0].joins;
+            not = subSentences[0].not;
+            subSentences = sent.subSentences;
         }
     }
     private int operatorCheck(int i)
@@ -311,11 +322,10 @@ public class Sentence{
     public void simplfy()
     {
         // convertImplication();
-        pushNegativeInwards();
+        DeMorgans();
         Console.WriteLine(printString());
     }
-
-    public void convertImplication()
+    private void convertImplication()
     {
         for (int impIndex = 0; impIndex < joins.Count; impIndex++)
         {
@@ -328,14 +338,23 @@ public class Sentence{
             }
         }
     }
-    public void pushNegativeInwards(){
+    private void DeMorgans(){
         if (not)
         {
             not = flip(not);
-            for (int index = 0; index < subSentences.Count; index++)
+            int index;
+            for (index = 0; index < joins.Count; index++)
             {
                 subSentences[index].not = flip(subSentences[index].not);
+                if (joins[index].OpName == "or"){
+                    joins[index] = new Operator("&&");
+                }
+                else if(joins[index].OpName == "and")
+                {
+                    joins[index] = new Operator("||");
+                }
             }
+            subSentences[index].not = flip(subSentences[index].not);
         }
         
     }
@@ -350,14 +369,31 @@ public class Sentence{
             return true;
         }
     }
-    // public static Sentence pushNegativeOutwards(Sentence sentence)
-    // {
-
-    // }
-    // public static Sentence expandBiconditional(Sentence sentence)
-    // {
-
-    // }
+    private Sentence pushNegativeOutwards(Sentence sentence)
+    {
+        // // inwards push, need to do the opposite
+        // if (not)
+        // {
+        //     not = flip(not);
+        //     for (int index = 0; index < subSentences.Count; index++)
+        //     {
+        //         subSentences[index].not = flip(subSentences[index].not);
+        //     }
+        // }
+        return null;
+    }
+    private void expandBiconditional(Sentence sentence)
+    {
+        for (int biIndex = 0; biIndex < joins.Count; biIndex++)
+        {
+            if (joins[biIndex].OpName == "biconditional")
+            {
+                joins[biIndex] = new Operator("||");
+                subSentences[biIndex].not = flip(subSentences[biIndex].not);
+                Console.WriteLine(this.printString());
+            }
+        }
+    }
     // public static Sentence convertToCNF(Sentence sentence)
     // {
 
