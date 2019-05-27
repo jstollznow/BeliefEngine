@@ -15,8 +15,19 @@ public class KnowledgeBase{
     }
 
     public void TELL(Sentence newSentence){
-        kBase.Add(newSentence);
-        Console.WriteLine("Your sentence was added to the KB" + Environment.NewLine);
+        bool alreadyExists = false;
+        foreach (var sentence in kBase) {
+            if (sentence.printString() == newSentence.printString()) {
+                alreadyExists = true;
+            }
+        }
+        if (alreadyExists) {
+            Console.WriteLine("Your sentence already exists in the KB " + Environment.NewLine);
+        } else {
+            kBase.Add(newSentence);
+            Console.WriteLine("Your sentence was added to the KB" + Environment.NewLine);
+        }
+        
     }
     public Sentence ASK(){
         return null;
