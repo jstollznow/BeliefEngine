@@ -7,9 +7,7 @@ public class Sentence{
     Sentence parent;
     List<Proposition> propsInSentence = new List<Proposition>();
     bool not;
-
     bool isValid;
-    
     bool nextNotVal = false;
     bool hasBrackets = false;
     string input;
@@ -325,10 +323,12 @@ public class Sentence{
     }
     public void simplfy()
     {
-        convertBiconditional();
+        // convertBiconditional();
         // DeMorgans();
         // Console.WriteLine(printString());
-        // DeMorgans();
+        DeMorgans();
+        // commutativity();
+        // distributivity("||","&&");
         Console.WriteLine(printString());
     }
     private void convertImplication()
@@ -385,29 +385,65 @@ public class Sentence{
                 string aSentence = subSentences[biIndex].printString();
                 string bSentence = subSentences[biIndex + 1].printString();
 
-                subSentences[biIndex] = new Sentence(aSentence + "->" + bSentence);
+                subSentences[biIndex] = new Sentence(aSentence + "->" + bSentence, false, this);
                 subSentences[biIndex].hasBrackets = true;
-                subSentences[biIndex + 1] = new Sentence(bSentence + "->" + aSentence);
+
+                subSentences[biIndex + 1] = new Sentence(bSentence + "->" + aSentence,false,this);
                 subSentences[biIndex + 1].hasBrackets = true;
-                // Sentence a = subSentences[biIndex];
-                // Sentence b = subSentences[biIndex + 1];
-
-                // subSentences[biIndex].subSentences.Clear();
-                // subSentences[biIndex].joins.Clear();
-
-                // subSentences[biIndex + 1].subSentences.Clear();
-                // subSentences[biIndex + 1].joins.Clear();
-
-                // subSentences[biIndex].subSentences.Add(a);
-                // subSentences[biIndex].joins.Add(new Operator("->"));
-                // subSentences[biIndex].subSentences.Add(b);
-
-                // subSentences[biIndex + 1].subSentences.Add(b);
-                // subSentences[biIndex + 1].joins.Add(new Operator("->"));
-                // subSentences[biIndex + 1].subSentences.Add(a);
 
                 joins[biIndex] = new Operator("&&");
-                
+            }
+        }
+    }
+
+    // andOverOr
+    // distributivity("||","&&");
+
+    // orOverAnd
+    // distributivity("&&","||");
+    private void distributivity(string op, string overOp)
+    {
+        for (int i = 0; i < joins.Count; i++)
+        {
+            if (joins[i].Op == op)
+            {
+                if (subSentences[i + 1].joins.Count != 0)
+                {
+                    if (subSentences[i + 1].joins[0].Op == overOp)
+                    {
+                        Sentence subSent1 = subSentences[i + 1];
+
+                        string aSentence = subSentences[i].printString() + op +
+                        subSent1.subSentences[0].printString();
+                        string bSentence = subSentences[i].printString() + op +
+                        subSent1.subSentences[1].printString();
+
+                        subSentences[i] = new Sentence(aSentence, false, this);
+                        subSentences[i].hasBrackets = true;
+
+                        subSentences[i + 1] = new Sentence(bSentence, false, this);
+                        subSentences[i + 1].hasBrackets = true;
+
+                        joins[i] = new Operator(overOp);
+
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    // flip arguements if join is OR or AND
+    private void commutativity()
+    {
+        for (int i = 0; i < joins.Count; i++)
+        {
+            if (joins[i].OpName == "or" || joins[i].OpName == "and")
+            {
+                Sentence a = new Sentence(subSentences[i].printString(), false, this);
+                a.hasBrackets = subSentences[i].hasBrackets;
+                subSentences[i] = subSentences[i + 1];
+                subSentences[i + 1] = a;
+                return;
             }
         }
     }
