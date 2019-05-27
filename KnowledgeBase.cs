@@ -17,7 +17,7 @@ public class KnowledgeBase{
     public void TELL(Sentence newSentence){
         bool alreadyExists = false;
         foreach (var sentence in kBase) {
-            if (sentence.ToString() == newSentence.ToString()) {
+            if (sentence.printString() == newSentence.printString()) {
                 alreadyExists = true;
             }
         }
