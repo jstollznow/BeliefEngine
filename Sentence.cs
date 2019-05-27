@@ -329,10 +329,13 @@ public class Sentence{
         }
     }
     public void pushNegativeInwards(){
-        not = flip(not);
-        for (int index = 0; index < subSentences.Count; index++)
+        if (not)
         {
-            subSentences[index].not = flip(subSentences[index].not);
+            not = flip(not);
+            for (int index = 0; index < subSentences.Count; index++)
+            {
+                subSentences[index].not = flip(subSentences[index].not);
+            }
         }
         
     }

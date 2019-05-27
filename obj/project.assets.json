@@ -686,23 +686,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vanes\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vanes\\BeliefEngine\\BeliefEngine.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\BeliefEngine.csproj",
       "projectName": "BeliefEngine",
-      "projectPath": "C:\\Users\\vanes\\BeliefEngine\\BeliefEngine.csproj",
-      "packagesPath": "C:\\Users\\vanes\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vanes\\BeliefEngine\\obj\\",
+      "projectPath": "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\BeliefEngine.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Documents\\GitHub\\BeliefEngine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\vanes\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.2"
