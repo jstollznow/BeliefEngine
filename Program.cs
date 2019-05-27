@@ -31,6 +31,7 @@ namespace BeliefEngine
                             Sentence logicSent = new Sentence(input);
                             if (logicSent.IsValid)
                             {
+                                logicSent.simplfy();
                                 ME.TELL(logicSent);
                             }
                         }

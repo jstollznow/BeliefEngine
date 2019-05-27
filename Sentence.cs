@@ -173,7 +173,6 @@ public class Sentence{
             }
         }
     }
-
     private int operatorCheck(int i)
     {
         int orginalPos = i;
@@ -309,9 +308,55 @@ public class Sentence{
             return carry;
         }
     }
-    public void toCNF(){
-        // sentences made up of clauses and && operator
-        // Clauses only use or
+    public void simplfy()
+    {
+        // convertImplication();
+        pushNegativeInwards();
+        Console.WriteLine(printString());
+    }
+
+    public void convertImplication()
+    {
+        for (int impIndex = 0; impIndex < joins.Count; impIndex++)
+        {
+            if (joins[impIndex].OpName == "implication")
+            {
+                joins[impIndex] = new Operator("||");
+                subSentences[impIndex].not = flip(subSentences[impIndex].not);
+                Console.WriteLine(this.printString());
+                return;
+            }
+        }
+    }
+    public void pushNegativeInwards(){
+        not = flip(not);
+        for (int index = 0; index < subSentences.Count; index++)
+        {
+            subSentences[index].not = flip(subSentences[index].not);
+        }
         
     }
+    private bool flip(bool value)
+    {
+        if (value)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    // public static Sentence pushNegativeOutwards(Sentence sentence)
+    // {
+
+    // }
+    // public static Sentence expandBiconditional(Sentence sentence)
+    // {
+
+    // }
+    // public static Sentence convertToCNF(Sentence sentence)
+    // {
+
+    // }
 }

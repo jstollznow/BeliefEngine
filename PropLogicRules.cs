@@ -20,4 +20,5 @@ static class PropLogicRules
     {
         return (implication(x,y) && implication(y,x));
     }
+    
 }
