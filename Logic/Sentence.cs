@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using static GlobalProps;
+
+/** Class to structure sentences and ensure that the input is valid */
 public class Sentence{
     List<Sentence> subSentences = new List<Sentence>();
     List<Operator> joins = new List<Operator>();
@@ -16,6 +18,7 @@ public class Sentence{
     public List<Proposition> PropsInSentence { get => propsInSentence; set => propsInSentence = value; }
     public bool IsValid { get => isValid; set => isValid = value; }
 
+    //Define sentence structure
     public Sentence(string input, bool not = false, Sentence parent = null)
     {
         this.input = input;
@@ -28,6 +31,8 @@ public class Sentence{
     {
         this.parent = parent;
     }
+
+    
     private Sentence(char propName, bool not, Sentence parent)
     {
         this.Not = not;
@@ -172,6 +177,7 @@ public class Sentence{
         return -1;
     }
 
+    // Move sentences into brackets
     private void pushPropsInSentence(){
         foreach (Sentence sent in subSentences)
         {
@@ -194,6 +200,7 @@ public class Sentence{
             subSentences = sent.subSentences;
         }
     }
+    //Verify location of operators
     private int operatorCheck(int i)
     {
         int orginalPos = i;
@@ -234,6 +241,8 @@ public class Sentence{
         i = orginalPos;
         return i;
     }
+
+    //Check is a proposition is negative
     private int negCheck(int i)
     {
         int orginalPos = i;
@@ -290,6 +299,8 @@ public class Sentence{
         i = orginalPos;
         return i;
     }
+
+    // Outputs the propositional sentence as a string so it can be printed
     public virtual string printString()
     {
         string sent = null;
@@ -313,6 +324,8 @@ public class Sentence{
         }
         return sent;
     }
+
+    // Returns if a value is true or false
     public virtual bool getValue(){
         bool carry = subSentences[0].getValue();
         for (int i = 0; i < joins.Count; i++)
@@ -328,6 +341,8 @@ public class Sentence{
             return carry;
         }
     }
+    
+    //Converts a sentence to conjunctive normal form
     public void simplfy()
     {
         for (int jIndex = 0; jIndex < joins.Count; jIndex++)
