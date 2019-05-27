@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+/* Generates a truth table with the propositions in the knowledge base and operations involved */
 public class TruthTable
 {
     TruthElement[,] table;

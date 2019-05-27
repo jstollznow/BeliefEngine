@@ -4,6 +4,7 @@ using static GlobalProps;
 
 namespace BeliefEngine
 {
+    /** Main program - controls the terminal line GUI*/
     class Program
     {
         public static KnowledgeBase ME = new KnowledgeBase("Jacob");
@@ -30,7 +31,8 @@ namespace BeliefEngine
                             if (input == "-1"){break;}
                             Sentence logicSent = new Sentence(input);
                             if (logicSent.IsValid)
-                            {
+                            {   
+                                //simplify sentence to CNF and add to KB
                                 logicSent.simplfy();
                                 ME.TELL(logicSent);
                             }
@@ -40,6 +42,7 @@ namespace BeliefEngine
                         Console.WriteLine("Please enter a logic sentence: ");
                         string line = Console.ReadLine();
                         Sentence entailSent = new Sentence(line);
+                        //Check if a propositional sentence entails the KB
                         if (ME.checkEntailment(entailSent))
                         {
                             Console.WriteLine("The sentence entails the belief base");

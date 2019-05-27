@@ -3,10 +3,14 @@ using System;
 using System.Collections.Generic;
 
 using static GlobalProps;
-public class KnowledgeBase{
-    List<Sentence> kBase = new List<Sentence>();
-    List<Proposition> kProps = new List<Proposition>();
 
+/** Knowledge base of the belief revision agent */
+public class KnowledgeBase{
+    //List which stores the beliefs 
+    List<Sentence> kBase = new List<Sentence>();
+    //List of propositions which are used in the beliefs
+    List<Proposition> kProps = new List<Proposition>();
+    //Truth table to check the logical entailment of sentences
     TruthTable truthTable;
     string name;
     public KnowledgeBase(string name){
@@ -14,7 +18,9 @@ public class KnowledgeBase{
         truthTable = new TruthTable(this.kBase);
     }
 
+    /** Tell function: takes a user input and adds it to the knowledge base */
     public void TELL(Sentence newSentence){
+        //Check to see if the sentence has not already been added to the knowledge base
         bool alreadyExists = false;
         foreach (var sentence in kBase) {
             if (sentence.printString() == newSentence.printString()) {
@@ -29,9 +35,11 @@ public class KnowledgeBase{
         }
         
     }
+    
     public Sentence ASK(){
         return null;
     }
+    //Allows a user to query the knowledge base and determines if a logical sentence entails the KB
     public bool checkEntailment(Sentence newSentence){
         if (kBase.Count == 0)
         {
@@ -50,6 +58,7 @@ public class KnowledgeBase{
         }
         return true;
     }
+    //Prints the knowledge base to terminal
     public void listSentences()
     {
         Console.WriteLine("Knowledge Base of "+ this.name +":");
