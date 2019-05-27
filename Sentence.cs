@@ -26,11 +26,11 @@ public class Sentence{
         this.parent = parent;
         IsValid = smartSort();
     }
-    public Sentence(Sentence parent)
+    protected Sentence(Sentence parent)
     {
         this.parent = parent;
     }
-    public Sentence(char propName, bool not, Sentence parent)
+    private Sentence(char propName, bool not, Sentence parent)
     {
         this.Not = not;
         Proposition newProp = null;
@@ -56,7 +56,6 @@ public class Sentence{
     }
     public bool smartSort()
     {
-        
         int i = 0;
         if (input != null)
         {
@@ -326,8 +325,10 @@ public class Sentence{
     }
     public void simplfy()
     {
-        // convertImplication();
-        DeMorgansForward();
+        convertBiconditional();
+        // DeMorgans();
+        // Console.WriteLine(printString());
+        // DeMorgans();
         Console.WriteLine(printString());
     }
     private void convertImplication()
@@ -347,25 +348,22 @@ public class Sentence{
     {
         
     }
-    private void DeMorgansForward(){
-        if (not)
+    private void DeMorgans(){
+        not = flip(not);
+        hasBrackets = not;
+        int index;
+        for (index = 0; index < joins.Count; index++)
         {
-            not = flip(not);
-            int index;
-            for (index = 0; index < joins.Count; index++)
-            {
-                subSentences[index].not = flip(subSentences[index].not);
-                if (joins[index].OpName == "or"){
-                    joins[index] = new Operator("&&");
-                }
-                else if(joins[index].OpName == "and")
-                {
-                    joins[index] = new Operator("||");
-                }
-            }
             subSentences[index].not = flip(subSentences[index].not);
+            if (joins[index].OpName == "or"){
+                joins[index] = new Operator("&&");
+            }
+            else if(joins[index].OpName == "and")
+            {
+                joins[index] = new Operator("||");
+            }
         }
-        
+        subSentences[index].not = flip(subSentences[index].not);
     }
     private bool flip(bool value)
     {
@@ -378,33 +376,39 @@ public class Sentence{
             return true;
         }
     }
-    private Sentence pushNegativeOutwards(Sentence sentence)
-    {
-        // // inwards push, need to do the opposite
-        // if (not)
-        // {
-        //     not = flip(not);
-        //     for (int index = 0; index < subSentences.Count; index++)
-        //     {
-        //         subSentences[index].not = flip(subSentences[index].not);
-        //     }
-        // }
-        return null;
-    }
-    private void expandBiconditional(Sentence sentence)
+    private void convertBiconditional()
     {
         for (int biIndex = 0; biIndex < joins.Count; biIndex++)
         {
             if (joins[biIndex].OpName == "biconditional")
             {
-                joins[biIndex] = new Operator("||");
-                subSentences[biIndex].not = flip(subSentences[biIndex].not);
-                Console.WriteLine(this.printString());
+                string aSentence = subSentences[biIndex].printString();
+                string bSentence = subSentences[biIndex + 1].printString();
+
+                subSentences[biIndex] = new Sentence(aSentence + "->" + bSentence);
+                subSentences[biIndex].hasBrackets = true;
+                subSentences[biIndex + 1] = new Sentence(bSentence + "->" + aSentence);
+                subSentences[biIndex + 1].hasBrackets = true;
+                // Sentence a = subSentences[biIndex];
+                // Sentence b = subSentences[biIndex + 1];
+
+                // subSentences[biIndex].subSentences.Clear();
+                // subSentences[biIndex].joins.Clear();
+
+                // subSentences[biIndex + 1].subSentences.Clear();
+                // subSentences[biIndex + 1].joins.Clear();
+
+                // subSentences[biIndex].subSentences.Add(a);
+                // subSentences[biIndex].joins.Add(new Operator("->"));
+                // subSentences[biIndex].subSentences.Add(b);
+
+                // subSentences[biIndex + 1].subSentences.Add(b);
+                // subSentences[biIndex + 1].joins.Add(new Operator("->"));
+                // subSentences[biIndex + 1].subSentences.Add(a);
+
+                joins[biIndex] = new Operator("&&");
+                
             }
         }
     }
-    // public static Sentence convertToCNF(Sentence sentence)
-    // {
-
-    // }
 }
