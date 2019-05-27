@@ -5,7 +5,7 @@ public class Operator{
     string op;
     public Operator(string val)
     {
-        this.op = val;
+        this.Op = val;
         // ~ not
         // && ..and..
         // || ..or..
@@ -43,10 +43,11 @@ public class Operator{
     }
 
     public string OpName { get => opName; set => opName = value; }
+    public string Op { get => op; set => op = value; }
 
     public string printString()
     {
-        return op;
+        return Op;
     }
 
     public bool operate(bool x, bool y = false)
