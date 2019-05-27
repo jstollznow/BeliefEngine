@@ -41,7 +41,7 @@ namespace BeliefEngine
                         Sentence entailSent = new Sentence(line);
                         if (ME.checkEntailment(entailSent))
                         {
-                            Console.WriteLine("The sentence is entails the belief base");
+                            Console.WriteLine("The sentence entails the belief base");
                         }
                         else
                         {

@@ -1,0 +1,11 @@
+C:\Users\vanes\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.deps.json
+C:\Users\vanes\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.runtimeconfig.json
+C:\Users\vanes\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.runtimeconfig.dev.json
+c:\Users\vanes\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.dll
+c:\Users\vanes\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.pdb
+c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.csprojAssemblyReference.cache
+c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.csproj.CoreCompileInputs.cache
+c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfoInputs.cache
+c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfo.cs
+c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.dll
+c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.pdb
