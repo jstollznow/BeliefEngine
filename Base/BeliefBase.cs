@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 
 using static GlobalProps;
-public class KnowledgeBase{
+public class BeliefBase{
     List<Sentence> kBase = new List<Sentence>();
     List<Proposition> kProps = new List<Proposition>();
 
     TruthTable truthTable;
     string name;
-    public KnowledgeBase(string name){
+    public BeliefBase(string name){
         this.name = name;
         truthTable = new TruthTable(this.kBase);
     }

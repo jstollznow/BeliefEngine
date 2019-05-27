@@ -93,7 +93,7 @@ public class Sentence{
                             i = negCheck(i);
                             if (i != -1)
                             {
-                                nextNotVal = true;
+                                nextNotVal = !nextNotVal;
                                 i = i + 1;
                             }
                             break;
@@ -107,6 +107,14 @@ public class Sentence{
                     i = propCheck(i);
                     if (i != -1)
                     {
+                        if (input[i] == 'F')
+                        {
+                            subSentences.Add(new Falsum(this));
+                        }
+                        else if(input[i] == 'T')
+                        {
+                            subSentences.Add(new Tautology(this));
+                        }
                         // if char is a letter, add a subsetence which is a proposition
                         subSentences.Add(new Sentence(input[i], nextNotVal, this));
                         nextNotVal = false;
@@ -257,7 +265,6 @@ public class Sentence{
         i = orginalPos;
         return i;
     }
-
     private int propCheck(int i)
     {
         int orginalPos = i;
@@ -323,9 +330,14 @@ public class Sentence{
     }
     public void simplfy()
     {
-        // convertBiconditional();
+        for (int jIndex = 0; jIndex < joins.Count; jIndex++)
+        {
+            convertBiconditional();
+            convertImplication();
+            
+        }
         // DeMorgans();
-        // Console.WriteLine(printString());
+        Console.WriteLine(printString());
         DeMorgans();
         // commutativity();
         // distributivity("||","&&");
@@ -363,7 +375,15 @@ public class Sentence{
                 joins[index] = new Operator("||");
             }
         }
-        subSentences[index].not = flip(subSentences[index].not);
+        if (subSentences[index].GetType() != typeof(Proposition))
+        {
+            subSentences[index].not = flip(subSentences[index].not);
+        }
+        else
+        {
+            not = flip(not);
+            hasBrackets = not;
+        }
     }
     private bool flip(bool value)
     {

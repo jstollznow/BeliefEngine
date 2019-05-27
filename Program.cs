@@ -6,7 +6,7 @@ namespace BeliefEngine
 {
     class Program
     {
-        public static KnowledgeBase ME = new KnowledgeBase("Jacob");
+        public static BeliefBase ME = new BeliefBase("Jacob");
         static void Main(string[] args)
         {
             Console.WriteLine(Environment.NewLine + 

@@ -5,7 +5,6 @@ public class Proposition:Sentence{
     {
         this.name = input;
     }
-
     public char Name { get => name; set => name = value; }
     public bool Value { get => value; set => this.value = value; }
 
