@@ -353,103 +353,177 @@ public class Sentence
     public void simplfy()
     //Converts a sentence to conjunctive normal form
     {
+        bicondLoop();
+        impLoop();
+        deMorganLoop();
+        distLoop();
+        // bool noDistribution = false;
+        // int count = 0;
+        // if (joins.Count == 1)
+        // {
+        //     // commutativity();
+        //     while (count <= 1)
+        //     {
+        //         // commutativity();
+        //         // Console.WriteLine("Pre distrib: " + printString());
+        //         if (joins[0].Op == "||")
+        //         {
+        //             noDistribution = distributivity("||", "&&");
+        //         }
+        //         else
+        //         {
+        //             noDistribution = distributivity("&&", "||");
+        //         }
+        //         // Console.WriteLine("Post distrib: " + printString());
+        //         // Console.WriteLine("Pre commutativity: " + printString());
+        //         if (noDistribution)
+        //         {
+        //         }
+        //         commutativity();
+        //         count++;
+        //     }
+        // } 
+        // // cycle();
+        // bool noLogicAction = false;
+        // bool knownsNoAction = false;
+        // // while (!noLogicAction)
+        // // }
+        // // {
+
+        // // while (!knownsNoAction && joins.Count >= 1)
+        // // {
+        // // }
+
+        // // bool noBracketFix = false;
+        // // while (!noBracketFix)
+        // // {
+        // //     noBracketFix = fixBrackets();
+        // // }
+        // if (joins.Count >= 1)
+        // {
+        //     while (!noLogicAction && !knownsNoAction)
+        //     {
+        //         cycle();
+        //         if (joins.Count >= 1)
+        //         {
+        //             Console.WriteLine("Before Logic: " + printString());
+        //             noLogicAction = applyBasicLogic();
+        //             Console.WriteLine("After Logic: " + printString());
+        //         }
+        //         else 
+        //         {
+        //             noLogicAction = true;
+        //         }
+        //         if (joins.Count >= 1)
+        //         {
+        //             Console.WriteLine("Before Knowns: " + printString());
+        //             knownsNoAction = applyKnowns();
+        //             Console.WriteLine("After Knowns: " + printString());
+        //         }
+        //         else
+        //         {
+        //             knownsNoAction = true;
+        //         }
+        //         if (knownsNoAction && noLogicAction)
+        //         {
+        //             return;
+        //         }
+                
+        //     }
+        // }
+        // // applyKnowns();
+    }
+    private void bicondLoop()
+    {
         foreach (Sentence sub in subSentences)
         {
-            sub.simplfy();
+            sub.bicondLoop();
         }
-        bool noBiAction = false;
-        while (!noBiAction && joins.Count == 1)
-        // expand all biconditionals first
+        if (joins.Count != 0)
         {
-            noBiAction = convertBiconditional();
+            Operator[] staticJoins = new Operator[joins.Count];
+            joins.CopyTo(staticJoins);
+            foreach (Operator join in staticJoins)
+            {
+                if (join.Op == "<>")
+                {
+                    convertBiconditional();
+                }
+            }
         }
-        bool noImpAction = false;
-        while (!noImpAction && joins.Count == 1)
-        // expand all implications nexts
+    }
+    private void impLoop()
+    {
+        foreach (Sentence sub in subSentences)
         {
-            noImpAction = convertImplication();
+            sub.impLoop();
         }
-        // cycle();
+        if (joins.Count != 0)
+        {
+            Operator[] staticJoins = new Operator[joins.Count];
+            joins.CopyTo(staticJoins);
+            foreach (Operator join in staticJoins)
+            {
+                if (join.Op == "->")
+                {
+                    convertImplication();
+                }
+            }
+        }
+    }
+
+    private void deMorganLoop()
+    {
         if (applyDeMorgans())
         // push negatives inwards
         {
             DeMorgans();
         }
-        bool noDistribution = false;
-        int count = 0;
-        if (joins.Count == 1)
+        foreach (Sentence sub in subSentences)
         {
-            // commutativity();
-            while (count <= 1)
+            sub.deMorganLoop();
+        }
+    }
+    private void distLoop()
+    {
+        // foreach (Sentence sub in subSentences)
+        // {
+        //     sub.distLoop();
+        // }
+        if (joins.Count != 0)
+        {
+            Operator[] staticJoins = new Operator[joins.Count];
+            joins.CopyTo(staticJoins);
+            foreach (Operator join in staticJoins)
             {
-                // commutativity();
-                // Console.WriteLine("Pre distrib: " + printString());
-                if (joins[0].Op == "||")
-                {
-                    noDistribution = distributivity("||", "&&");
-                }
-                else
-                {
-                    noDistribution = distributivity("&&", "||");
-                }
-                // Console.WriteLine("Post distrib: " + printString());
-                // Console.WriteLine("Pre commutativity: " + printString());
-                if (noDistribution)
-                {
-                }
                 commutativity();
-                count++;
-            }
-        } 
-        // cycle();
-        bool noLogicAction = false;
-        bool knownsNoAction = false;
-        // while (!noLogicAction)
-        // }
-        // {
-
-        // while (!knownsNoAction && joins.Count >= 1)
-        // {
-        // }
-
-        // bool noBracketFix = false;
-        // while (!noBracketFix)
-        // {
-        //     noBracketFix = fixBrackets();
-        // }
-        if (joins.Count >= 1)
-        {
-            while (!noLogicAction && !knownsNoAction)
-            {
-                cycle();
-                if (joins.Count >= 1)
+                bool noChange = false;
+                if (join.Op == "||")
                 {
-                    Console.WriteLine("Before Logic: " + printString());
-                    noLogicAction = applyBasicLogic();
-                    Console.WriteLine("After Logic: " + printString());
-                }
-                else 
-                {
-                    noLogicAction = true;
-                }
-                if (joins.Count >= 1)
-                {
-                    Console.WriteLine("Before Knowns: " + printString());
-                    knownsNoAction = applyKnowns();
-                    Console.WriteLine("After Knowns: " + printString());
+                    noChange = distributivity("||","&&");
                 }
                 else
                 {
-                    knownsNoAction = true;
+                    noChange = distributivity("&&", "||");
                 }
-                if (knownsNoAction && noLogicAction)
+                if(noChange)
                 {
-                    return;
+                    commutativity();
+                    if (join.Op == "||")
+                    {
+                        noChange = distributivity("||", "&&");
+                    }
+                    else
+                    {
+                        noChange = distributivity("&&", "||");
+                    }
                 }
-                
             }
         }
-        // applyKnowns();
+        foreach (Sentence sub in subSentences)
+        {
+            sub.distLoop();
+        }
     }
     private void cycle()
     {
@@ -557,6 +631,7 @@ public class Sentence
                             Sentence a = new Sentence(subSentences[0].printString() +
                             op + subSubSent.printString(), false, this);
                             a.hasBrackets = true;
+                            this.hasBrackets = false;
                             newSentences.Add(a);
                         }
                         for (int i = 0; i < (newSentences.Count - 1); i++)
