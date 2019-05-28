@@ -65,7 +65,7 @@ namespace BeliefEngine
             string menu = string.Empty;
             for(int i = 0; i < options.Length; i++)
             {
-                menu = menu + (i + 1).ToString()+". "+options[i] + Environment.NewLine;
+                menu = menu + (i + 1).ToString() + ". " + options[i] + Environment.NewLine;
             }
             menu = menu + "Please select an option, (1,2,...): " + Environment.NewLine;
             Console.Write(menu);
