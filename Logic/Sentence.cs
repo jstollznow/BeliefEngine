@@ -351,65 +351,66 @@ public class Sentence{
     public void simplfy()
     //Converts a sentence to conjunctive normal form
     {
-        bool biconditional = true;
-        while (biconditional)
+        bool noBiAction = false;
+        while (!noBiAction && joins.Count == 1)
+        // expand all biconditionals first
         {
-            biconditional = false;
-            for (int jIndex = 0; jIndex < joins.Count; jIndex++)
-            {
-                if (joins[jIndex].Op == "<>")
-                {
-                    convertBiconditional();
-                    biconditional = true;
-                }
-            }
+            noBiAction = convertBiconditional();
         }
-        // cycle();
-
-        bool implication = true;
-        while (implication)
+        bool noImpAction = false;
+        while (!noImpAction && joins.Count == 1)
+        // expand all implications nexts
         {
-            implication = false;
-            for (int jIndex = 0; jIndex < joins.Count; jIndex++)
-            {
-                if (joins[jIndex].Op == "->")
-                {
-                    convertImplication();
-                    implication = true;
-                }
-            }
+            noImpAction = convertImplication();
         }
-        // cycle();
-
+        
         if (applyDeMorgans())
+        // push negatives inwards
         {
             DeMorgans();
         }
-        // cycle();
-
-        if (joins.Count == 1)
+        
+        bool noDistribution = false;
+        int count = 0;
+        while (!noDistribution && joins.Count == 1)
+        // don't know whether it should be applied more than once
         {
-            distributivity("||","&&");
-            // distributivity("&&", "||");
-            // commutativity();
-            // distributivity("&&", "||");
-            // distributivity("||", "&&");
+            if (joins[0].Op == "||")
+            {
+                noDistribution = distributivity("&&","||");
+            }
+            else
+            {
+                noDistribution = distributivity("||", "&&");
+            }
+            if (noDistribution == true){
+                if (count == 0){
+                    count ++;
+                    noDistribution = false;
+                    commutativity();
+                }
+            }
         }
-        bool noAction = false;
-        while (!noAction)
+        
+        bool noLogicAction = false;
+        while (!noLogicAction)
         {
-            noAction = applyBasicLogic();
+            noLogicAction = applyBasicLogic();
         }
+        
         bool knownsNoAction = false;
         while (!knownsNoAction && joins.Count >= 1)
         {
             knownsNoAction = applyKnowns();
         }
-        cycle();
         
-        // Console.WriteLine(printString());
-        // DeMorgans();
-        // Console.WriteLine(printString());
+        // bool noBracketFix = false;
+        // while (!noBracketFix)
+        // {
+        //     noBracketFix = fixBrackets();
+        // }
+
+        cycle();
     }
     private void cycle()
     {
@@ -418,7 +419,7 @@ public class Sentence{
             subSentences[sIndex].simplfy();
         }
     }
-    private void convertImplication()
+    private bool convertImplication()
     {
         for (int impIndex = 0; impIndex < joins.Count; impIndex++)
         {
@@ -427,13 +428,10 @@ public class Sentence{
                 joins[impIndex] = new Operator("||");
                 subSentences[impIndex].not = flip(subSentences[impIndex].not);
                 // Console.WriteLine(this.printString());
-                return;
+                return false;
             }
         }
-    }
-    private void associativity()
-    {
-        
+        return true;
     }
     private void DeMorgans(){
         not = flip(not);
@@ -471,7 +469,7 @@ public class Sentence{
             return true;
         }
     }
-    private void convertBiconditional()
+    private bool convertBiconditional()
     {
         for (int biIndex = 0; biIndex < joins.Count; biIndex++)
         {
@@ -487,8 +485,11 @@ public class Sentence{
                 subSentences[biIndex + 1].hasBrackets = true;
 
                 joins[biIndex] = new Operator("&&");
+
+                return false;
             }
         }
+        return true;
     }
 
     // andOverOr
@@ -496,7 +497,7 @@ public class Sentence{
 
     // orOverAnd
     // distributivity("&&","||");
-    private void distributivity(string op, string overOp)
+    private bool distributivity(string op, string overOp)
     {
             if (joins[0].Op == op)
             {
@@ -519,10 +520,11 @@ public class Sentence{
 
                         joins[0] = new Operator(overOp);
 
-                        return;
+                        return false;
                     }
                 }
             }
+            return true;
     }
     // flip arguements if join is OR or AND
     private bool applyBasicLogic()
