@@ -9,6 +9,7 @@ public class Sentence{
     Sentence parent;
     List<Proposition> propsInSentence = new List<Proposition>();
     bool not;
+
     bool isValid;
     bool nextNotVal = false;
     bool hasBrackets = false;
@@ -98,7 +99,7 @@ public class Sentence{
                             i = negCheck(i);
                             if (i != -1)
                             {
-                                nextNotVal = true;
+                                nextNotVal = !nextNotVal;
                                 i = i + 1;
                             }
                             break;
@@ -112,6 +113,14 @@ public class Sentence{
                     i = propCheck(i);
                     if (i != -1)
                     {
+                        if (input[i] == 'F')
+                        {
+                            subSentences.Add(new Falsum(this));
+                        }
+                        else if(input[i] == 'T')
+                        {
+                            subSentences.Add(new Tautology(this));
+                        }
                         // if char is a letter, add a subsetence which is a proposition
                         subSentences.Add(new Sentence(input[i], nextNotVal, this));
                         nextNotVal = false;
@@ -169,8 +178,9 @@ public class Sentence{
         return -1;
     }
 
+    private void pushPropsInSentence()
     // Move sentences into brackets
-    private void pushPropsInSentence(){
+    {
         foreach (Sentence sent in subSentences)
         {
             foreach (Proposition prop in sent.propsInSentence)
@@ -192,8 +202,8 @@ public class Sentence{
             subSentences = sent.subSentences;
         }
     }
-    //Verify location of operators
     private int operatorCheck(int i)
+    //Verify location of operators
     {
         int orginalPos = i;
         // check before operator
@@ -234,8 +244,8 @@ public class Sentence{
         return i;
     }
 
-    //Check is a proposition is negative
     private int negCheck(int i)
+    //Check is a proposition is negative
     {
         int orginalPos = i;
         i--;
@@ -266,8 +276,6 @@ public class Sentence{
         i = orginalPos;
         return i;
     }
-
-    // Verify that the proposition is a lower case letter
     private int propCheck(int i)
     {
         int orginalPos = i;
@@ -294,8 +302,8 @@ public class Sentence{
         return i;
     }
 
-    // Outputs the propositional sentence as a string so it can be printed
     public virtual string printString()
+    // Outputs the propositional sentence as a string so it can be printed
     {
         string sent = null;
         if (this.not == true)
@@ -319,8 +327,9 @@ public class Sentence{
         return sent;
     }
 
+    public virtual bool getValue()
     // Returns if a value is true or false
-    public virtual bool getValue(){
+    {
         bool carry = subSentences[0].getValue();
         for (int i = 0; i < joins.Count; i++)
         {
@@ -336,16 +345,31 @@ public class Sentence{
         }
     }
     
-    //Converts a sentence to conjunctive normal form
     public void simplfy()
+    //Converts a sentence to conjunctive normal form
     {
-        // convertBiconditional();
+        for (int jIndex = 0; jIndex < joins.Count; jIndex++)
+        {
+            if (joins[jIndex].Op =="<>")
+            {
+                convertBiconditional();
+            }
+            else if (joins[jIndex].Op == "->")
+            {
+                convertImplication();
+            }
+        }
+        if (applyDeMorgans())
+        {
+            DeMorgans();
+        }
+        for (int sIndex = 0; sIndex < subSentences.Count; sIndex++)
+        {
+            subSentences[sIndex].simplfy();
+        }
+        // Console.WriteLine(printString());
         // DeMorgans();
         // Console.WriteLine(printString());
-        DeMorgans();
-        // commutativity();
-        // distributivity("||","&&");
-        Console.WriteLine(printString());
     }
     private void convertImplication()
     {
@@ -379,7 +403,15 @@ public class Sentence{
                 joins[index] = new Operator("||");
             }
         }
-        subSentences[index].not = flip(subSentences[index].not);
+        if (subSentences[index].GetType() != typeof(Proposition))
+        {
+            subSentences[index].not = flip(subSentences[index].not);
+        }
+        else
+        {
+            not = flip(not);
+            hasBrackets = not;
+        }
     }
     private bool flip(bool value)
     {
@@ -462,5 +494,14 @@ public class Sentence{
                 return;
             }
         }
+    }
+
+    private bool applyDeMorgans()
+    {
+        if (not && subSentences.Count > 1)
+        {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,11 +1,10 @@
 public class Proposition:Sentence{
     bool value;
     char name;
-    public Proposition(char input):base()
+    public Proposition(char input, Sentence parent):base(parent)
     {
         this.name = input;
     }
-
     public char Name { get => name; set => name = value; }
     public bool Value { get => value; set => this.value = value; }
 

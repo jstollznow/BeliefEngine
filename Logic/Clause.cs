@@ -1,8 +1,8 @@
 
 
-public class Clause{
-    //Just pretending sentence is a string
-    public Clause(string s)
+public class Clause
+{
+    public Clause(Sentence mySentence)
     {
         // this will be a conversion from a sentence to a clause
         // the sentence will be something like sentence && sentence

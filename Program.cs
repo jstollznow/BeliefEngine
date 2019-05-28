@@ -4,39 +4,55 @@ using static GlobalProps;
 
 namespace BeliefEngine
 {
+    /** Main program - controls the terminal line GUI*/
     class Program
     {
+        public static BeliefBase ME = new BeliefBase("Jacob");
         static void Main(string[] args)
         {
-            string[] options={"Print belief base",
-            "Enter logic sentence", "Exit"};
+            Console.WriteLine(Environment.NewLine + 
+            "Welcome to the Belief Revision Engine! How may I help you?" + 
+            Environment.NewLine);
+            string[] options = {"Print belief base",
+            "Add sentence to belief base", "Entailment" ,"Exit"};
             props = new List<Proposition>();
             while(true){
                 switch(menuOption(options))
                 {
                     case 1:
-
+                        ME.listSentences();
                     break;
                     case 2:
-                        Console.WriteLine("Please enter a logic sentence: "+Environment.NewLine);
-                        string val = Console.ReadLine();
-                        Sentence test = new Sentence(val);
-                        KnowledgeBase ME = new KnowledgeBase("Jacob");
-                        ME.TELL(test);
-                        ME.listSentences();
-                        bool[] propValues = new bool[] {true, true};
-                        // propositions in globalProps are a list of letters
-                        // the letters are set in the order they are created
-                        // i.e. if you use p then q
-                        // you would send an array of 2 to setPropositions
-                        // array[0] would set p, and array[1] would set q
-                        setPropositions(propValues);
-                        Console.WriteLine("When " + propositions() + " are equal to " + 
-                        propValues.GetValue(0) + " and " + propValues.GetValue(1) + ". Test is " + test.getValue());
-                        // each sentence will account for the globally set values and return an answer
-                        // you could use this method to rotate the values and hence generate a truth table for a 
-                        // given sentence, in the knowledge base, then this truth table could be used
-                        // when trying to add a new sentence
+                        while(true)
+                        {
+                            Console.WriteLine("Please enter a logic sentence (type -1 to stop adding): ");
+                            string input = Console.ReadLine();
+                            Console.Write(Environment.NewLine);
+                            if (input == "-1"){break;}
+                            Sentence logicSent = new Sentence(input);
+                            if (logicSent.IsValid)
+                            {
+                                //simplify sentence to CNF and add to KB
+                                Console.WriteLine(logicSent.printString());
+                                logicSent.simplfy();
+                                Console.WriteLine(logicSent.printString());
+                                ME.TELL(logicSent);
+                            }
+                        }
+                    break;
+                    case 3:
+                        Console.WriteLine("Please enter a logic sentence: ");
+                        string line = Console.ReadLine();
+                        Sentence entailSent = new Sentence(line);
+                        //Check if a propositional sentence entails the KB
+                        if (ME.checkEntailment(entailSent))
+                        {
+                            Console.WriteLine("The sentence entails the belief base");
+                        }
+                        else
+                        {
+                            Console.WriteLine("The sentence does not entail the belief base.");
+                        }
                     break;
                     default:
                         return;
@@ -60,7 +76,9 @@ namespace BeliefEngine
                  Console.WriteLine("Please enter a valid number: ");
                  val = Console.ReadLine();   
             }
+            Console.Write(Environment.NewLine);
             return option;
         }
     }
+    
 }
