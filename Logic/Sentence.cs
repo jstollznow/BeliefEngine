@@ -354,84 +354,19 @@ public class Sentence
     //Converts a sentence to conjunctive normal form
     {
         bicondLoop();
+        Console.WriteLine("After Biconditional:" + printString());
         impLoop();
+        Console.WriteLine("After Implies:" + printString());
         deMorganLoop();
+        Console.WriteLine("After deMorgan:" + printString());
         distLoop();
-        // bool noDistribution = false;
-        // int count = 0;
-        // if (joins.Count == 1)
-        // {
-        //     // commutativity();
-        //     while (count <= 1)
-        //     {
-        //         // commutativity();
-        //         // Console.WriteLine("Pre distrib: " + printString());
-        //         if (joins[0].Op == "||")
-        //         {
-        //             noDistribution = distributivity("||", "&&");
-        //         }
-        //         else
-        //         {
-        //             noDistribution = distributivity("&&", "||");
-        //         }
-        //         // Console.WriteLine("Post distrib: " + printString());
-        //         // Console.WriteLine("Pre commutativity: " + printString());
-        //         if (noDistribution)
-        //         {
-        //         }
-        //         commutativity();
-        //         count++;
-        //     }
-        // } 
-        // // cycle();
-        // bool noLogicAction = false;
-        // bool knownsNoAction = false;
-        // // while (!noLogicAction)
-        // // }
-        // // {
-
-        // // while (!knownsNoAction && joins.Count >= 1)
-        // // {
-        // // }
-
-        // // bool noBracketFix = false;
-        // // while (!noBracketFix)
-        // // {
-        // //     noBracketFix = fixBrackets();
-        // // }
-        // if (joins.Count >= 1)
-        // {
-        //     while (!noLogicAction && !knownsNoAction)
-        //     {
-        //         cycle();
-        //         if (joins.Count >= 1)
-        //         {
-        //             Console.WriteLine("Before Logic: " + printString());
-        //             noLogicAction = applyBasicLogic();
-        //             Console.WriteLine("After Logic: " + printString());
-        //         }
-        //         else 
-        //         {
-        //             noLogicAction = true;
-        //         }
-        //         if (joins.Count >= 1)
-        //         {
-        //             Console.WriteLine("Before Knowns: " + printString());
-        //             knownsNoAction = applyKnowns();
-        //             Console.WriteLine("After Knowns: " + printString());
-        //         }
-        //         else
-        //         {
-        //             knownsNoAction = true;
-        //         }
-        //         if (knownsNoAction && noLogicAction)
-        //         {
-        //             return;
-        //         }
-                
-        //     }
-        // }
-        // // applyKnowns();
+        Console.WriteLine("After dist:" + printString());
+        bracketLoop();
+        Console.WriteLine("After brackets:" + printString());
+        shorteningLoop();
+        Console.WriteLine("After logic:" + printString());
+        knownLoop();
+        // Console.WriteLine("After knowns:" + printString());
     }
     private void bicondLoop()
     {
@@ -486,25 +421,21 @@ public class Sentence
     }
     private void distLoop()
     {
-        // foreach (Sentence sub in subSentences)
-        // {
-        //     sub.distLoop();
-        // }
+        foreach (Sentence sub in subSentences)
+        {
+            sub.distLoop();
+        }
         if (joins.Count != 0)
         {
             Operator[] staticJoins = new Operator[joins.Count];
             joins.CopyTo(staticJoins);
             foreach (Operator join in staticJoins)
             {
-                commutativity();
+                // commutativity();
                 bool noChange = false;
                 if (join.Op == "||")
                 {
                     noChange = distributivity("||","&&");
-                }
-                else
-                {
-                    noChange = distributivity("&&", "||");
                 }
                 if(noChange)
                 {
@@ -513,10 +444,6 @@ public class Sentence
                     {
                         noChange = distributivity("||", "&&");
                     }
-                    else
-                    {
-                        noChange = distributivity("&&", "||");
-                    }
                 }
             }
         }
@@ -524,6 +451,49 @@ public class Sentence
         {
             sub.distLoop();
         }
+    }
+
+    private void shorteningLoop()
+    {
+        foreach (Sentence sub in subSentences)
+        {
+            sub.shorteningLoop();
+        }
+        applyBasicLogic();
+        // foreach (Sentence sub in subSentences)
+        // {
+        //     sub.shorteningLoop();
+        // }
+    }
+    private void knownLoop()
+    {
+        foreach (Sentence sub in subSentences)
+        {
+            sub.knownLoop();
+        }
+        applyKnowns();
+        // if (joins.Count >= 1)
+        // {
+        // }
+        foreach (Sentence sub in subSentences)
+        {
+            sub.knownLoop();
+        }
+    }
+    private void bracketLoop()
+    {
+        foreach (Sentence sub in subSentences)
+        {
+            sub.bracketLoop();
+        }
+        if (joins.Count >= 1)
+        {
+            fixBrackets();
+        }
+        // foreach (Sentence sub in subSentences)
+        // {
+        //     sub.knownLoop();
+        // }
     }
     private void cycle()
     {
@@ -631,7 +601,6 @@ public class Sentence
                             Sentence a = new Sentence(subSentences[0].printString() +
                             op + subSubSent.printString(), false, this);
                             a.hasBrackets = true;
-                            this.hasBrackets = false;
                             newSentences.Add(a);
                         }
                         for (int i = 0; i < (newSentences.Count - 1); i++)
@@ -642,7 +611,7 @@ public class Sentence
                         subSentences = newSentences;
                         joins = newJoins;
 
-                        Console.WriteLine("After: " + printString());
+                        // Console.WriteLine("After: " + printString());
                         return false;
                     }
                 }
@@ -682,7 +651,7 @@ public class Sentence
                             subSentences.RemoveAt(j);
                         }
                         joins.RemoveAt(0);
-                        hasBrackets = false;
+                        // hasBrackets = false;
                         if (checkOp == "or")
                         {
                             subSentences.Add(new Tautology(this));
@@ -721,7 +690,7 @@ public class Sentence
                                     subSentences.RemoveAt(j);
                                 }
                                 joins.RemoveAt(0);
-                                hasBrackets = false;
+                                // hasBrackets = false;
                                 if (checkOp == "or")
                                 {
                                     subSentences.Add(new Tautology(this));
@@ -750,48 +719,120 @@ public class Sentence
         {
             if (subSentences[i].GetType() == typeof(Tautology))
             {
-                string checkOp = joins[0].OpName;
-                joins.RemoveAt(0);
-                hasBrackets = false;
-                if (checkOp == "and")
-                // T and x
-                {
-                    subSentences.RemoveAt(i);
-                }
-                else
-                // T or x
-                {
-                    subSentences.Clear();
-                    joins.Clear();
-                    subSentences.Add(new Tautology(this));
-                }
+                // if (joins.Count == 0)
+                // {
+                //     if (parent != null)
+                //     {
+                //         parent.subSentences.Add(subSentences[i]);
+                //         parent.subSentences.Remove(this);
+                //         if (parent.parent != null)
+                //         {
+                //             if (parent.subSentences.Count == 1)
+                //             {
+                //                 parent.parent.subSentences.Add(subSentences[i]);
+                //                 parent.parent.subSentences.Remove(this.parent);
+                //             }
+                //         }
+                //     }
+                   
+                // }
+                // else
+                // {
+                    string checkOp = joins[0].OpName;
+                    joins.RemoveAt(0);
+                    hasBrackets = false;
+                    if (checkOp == "and")
+                    // T and x
+                    {
+                        subSentences.RemoveAt(i);
+                    }
+                    else
+                    // T or x
+                    {
+                        // subSentences.Clear();
+                        // joins.Clear();
+                        parent.subSentences.Add(new Tautology(parent));
+                        parent.subSentences.Remove(this);
+                        // this.parent = null;
+                    }
+                // }
                 return false;
+                
             }
             else if (subSentences[i].GetType() == typeof(Falsum))
             {
-                string checkOp = joins[0].OpName;
-                joins.RemoveAt(0);
-                hasBrackets = false;
-                if (checkOp == "or")
-                // F or x
-                {
-                    subSentences.RemoveAt(i);
-                }
-                else
-                // F and x
-                {
-                    subSentences.Clear();
-                    joins.Clear();
-                    subSentences.Add(new Falsum(this));
-                }
+                // if (joins.Count == 0)
+                // {
+                //     if (parent != null)
+                //     {
+                //         parent.subSentences.Add(subSentences[i]);
+                //         parent.subSentences.Remove(this);
+                //         if (parent.parent != null)
+                //         {
+                //             if (parent.subSentences.Count == 1)
+                //             {
+                //                 parent.parent.subSentences.Add(subSentences[i]);
+                //                 parent.parent.subSentences.Remove(this);
+                //             }
+                //         }
+                //     }
+                // }
+                // else
+                // {
+                    string checkOp = joins[0].OpName;
+                    joins.RemoveAt(0);
+                    hasBrackets = false;
+                    if (checkOp == "or")
+                    // F or x
+                    {
+                        subSentences.RemoveAt(i);
+                    }
+                    else
+                    // F and x
+                    {
+                        subSentences.Clear();
+                        joins.Clear();
+                        parent.subSentences.Add(new Falsum(parent));
+                        parent.subSentences.Remove(this);
+                        this.parent = null;
+                    }
+                // }
                 return false;
             }
         }
+        // if (this.GetType() == typeof(Tautology))
+        // {
+        //     parent.subSentences.Add(subSentences[i]);
+        //     parent.subSentences.Remove(this);
+        // }
         return true;
     }
     private void fixBrackets()
     {
-
+        if (joins.Count >= 0)
+        {
+            Sentence[] staticSent = new Sentence[subSentences.Count];
+            subSentences.CopyTo(staticSent);
+            foreach (Sentence sub in staticSent)
+            {
+                if (sub.joins.Count >= 1)
+                {
+                    if (sub.joins[0].Op == joins[0].Op)
+                    {
+                        subSentences.AddRange(sub.subSentences);
+                        joins.AddRange(sub.joins);
+                        subSentences.Remove(sub);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (subSentences.Count == 1)
+            {
+                subSentences[0].hasBrackets = subSentences[0].not;
+            }
+        }
     }
     private void commutativity()
     {
