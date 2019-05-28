@@ -391,7 +391,7 @@ public class Sentence{
         {
             distributivity("||","&&");
             // distributivity("&&", "||");
-            commutativity();
+            // commutativity();
             // distributivity("&&", "||");
             // distributivity("||", "&&");
         }
@@ -400,8 +400,11 @@ public class Sentence{
         {
             noAction = applyBasicLogic();
         }
-        applyKnowns();
-        fixBrackets();
+        bool knownsNoAction = false;
+        while (!knownsNoAction && joins.Count >= 1)
+        {
+            knownsNoAction = applyKnowns();
+        }
         cycle();
         
         // Console.WriteLine(printString());
@@ -610,82 +613,71 @@ public class Sentence{
         }
         return true;
     }
-    private void applyKnowns()
+    private bool applyKnowns()
     {
         for (int i = 0; i < subSentences.Count; i++)
         {
-            if (subSentences[0].GetType() == typeof(Tautology) ||
-        (subSentences[1].GetType() == typeof(Tautology)))
+            if (subSentences[i].GetType() == typeof(Tautology))
             {
                 string checkOp = joins[0].OpName;
-                joins.Clear();
+                joins.RemoveAt(0);
                 hasBrackets = false;
                 if (checkOp == "and")
                 // T and x
                 {
-                    if (subSentences[1].GetType() == typeof(Tautology))
-                    {
-                        subSentences.RemoveAt(1);
-                    }
-                    else
-                    {
-                        subSentences.RemoveAt(0);
-                    }
+                    subSentences.RemoveAt(i);
                 }
                 else
                 // T or x
                 {
                     subSentences.Clear();
+                    joins.Clear();
                     subSentences.Add(new Tautology(this));
                 }
+                return false;
             }
-            else if ((subSentences[0].GetType() == typeof(Falsum) ||
-            (subSentences[1].GetType() == typeof(Falsum))))
+            else if (subSentences[i].GetType() == typeof(Falsum))
             {
                 string checkOp = joins[0].OpName;
-                joins.Clear();
+                joins.RemoveAt(0);
                 hasBrackets = false;
                 if (checkOp == "or")
-                // F and x
-                {
-                    if (subSentences[1].GetType() == typeof(Falsum))
-                    {
-                        subSentences.RemoveAt(1);
-                    }
-                    else
-                    {
-                        subSentences.RemoveAt(0);
-                    }
-                }
-                else
                 // F or x
                 {
-                    subSentences.Clear();
-                    subSentences.Add(new Falsum(this));
+                   subSentences.RemoveAt(i);
                 }
-            }
-            else
-            {
-                if (subSentences[0].applyDeMorgans())
-                {
-                    subSentences[0].DeMorgans();
-                }
-                if (subSentences[0].printString() == "~(" + subSentences[1].printString() + ")")
+                else
+                // F and x
                 {
                     subSentences.Clear();
                     joins.Clear();
-                    hasBrackets = false;
-                    if (joins[0].OpName == "or")
-                    {
-                        subSentences.Add(new Tautology(this));
-                    }
-                    else
-                    {
-                        subSentences.Add(new Falsum(this));
-                    }
+                    subSentences.Add(new Falsum(this));
                 }
+                return false;
             }
+            // else
+            // {
+            //     if (subSentences[0].applyDeMorgans())
+            //     {
+            //         subSentences[0].DeMorgans();
+            //     }
+            //     if (subSentences[0].printString() == "~(" + subSentences[1].printString() + ")")
+            //     {
+            //         subSentences.Clear();
+            //         joins.Clear();
+            //         hasBrackets = false;
+            //         if (joins[0].OpName == "or")
+            //         {
+            //             subSentences.Add(new Tautology(this));
+            //         }
+            //         else
+            //         {
+            //             subSentences.Add(new Falsum(this));
+            //         }
+            //     }
+            // }
         }
+        return true;
     }
     private void fixBrackets()
     {
