@@ -35,7 +35,7 @@ public class Sentence{
                             {
                                 i = -1;
                             }
-                            else 
+                            else
                             {
                                 i = i + 2;
                             }
@@ -50,7 +50,7 @@ public class Sentence{
                 }
                 else
                 {
-                    // if char is a letter, add a subsetence which is a proposition
+                    // if char is a letter, add a subsentence which is a proposition
                     subSentences.Add(new Proposition(input[i]));
                     i = i + 1;
                 }
@@ -59,7 +59,7 @@ public class Sentence{
 
         }
     }
-    
+
     public int bracket(int start)
     // handles finding the subsentence where brackets are used or required
     {
