@@ -529,7 +529,7 @@ public class Sentence
                         a.hasBrackets = true;
                         newSentences.Add(a);
                     }
-                    for (int i = 0; i < newSentences.Count - 1; i++)
+                    for (int i = 0; i < newSentences.Count; i++)
                     {
                         newJoins.Add(new Operator(overOp));
                     }
