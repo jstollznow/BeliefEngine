@@ -1,6 +1,6 @@
 using System;
-
 using System.Collections.Generic;
+using System.Linq;
 
 using static GlobalProps;
 public class BeliefBase{
@@ -20,21 +20,122 @@ public class BeliefBase{
         //Check to see if the sentence has not already been added to the knowledge base
         // need to fix somehow 
         // Later
-        bool alreadyExists = false;
-        foreach (var sentence in kBase) {
-            if (sentence.printString() == newSentence.printString()) {
-                alreadyExists = true;
+        if (newSentence.printString() == "T" || newSentence.printString() == "F")
+        {
+            Console.WriteLine("Cannot add axioms to belief base" + Environment.NewLine);
+            return;
+        }
+        if (checkEntailment(newSentence))
+        {
+            bool alreadyExists = false;
+            foreach (var sentence in kBase)
+            {
+                if (sentence.printString() == newSentence.printString())
+                {
+                    alreadyExists = true;
+                }
+            }
+            if (alreadyExists)
+            {
+                Console.WriteLine("Your sentence already exists in the KB " + Environment.NewLine);
+            }
+            else
+            {
+                kBase.Add(newSentence);
+                Console.WriteLine("Your sentence was added to the KB" + Environment.NewLine);
             }
         }
-        if (alreadyExists) {
-            Console.WriteLine("Your sentence already exists in the KB " + Environment.NewLine);
-        } else {
-            kBase.Add(newSentence);
-            Console.WriteLine("Your sentence was added to the KB" + Environment.NewLine);
+        else
+        {
+            Console.WriteLine("Your sentence is not entailed by the belief base" + Environment.NewLine);
+            // adjustBeliefBase(newSentence);
+            List<Sentence> Options = adjustBeliefBase(newSentence);
+            int count = 1;
+            Console.WriteLine("Here are your options: ");
+            foreach (Sentence item in Options)
+            {
+                Console.WriteLine(count + " " + item.printString());
+            }
+            // Console.Write(printBase());
         }
-        
     }
-    
+    public string printBase()
+    {
+        string sentences = "";
+        for (int i = 0; i < kBase.Count; i++)
+        {
+            sentences = sentences + (i + 1).ToString() + ". " + kBase[i].printString() + Environment.NewLine;
+        }
+        return sentences;
+    }
+    private List<Sentence> adjustBeliefBase(Sentence newSentence)
+    {
+            Sentence allSentences = makeBBSet();
+            List<Sentence> partialMeetOptions = new List<Sentence>();
+            List<int> order = new List<int>();
+            for (int i = 0; i < allSentences.SubSentences.Count; i++)
+            {
+                order.Add(i);
+            }
+            List<List<int>> combos = Combos.GetAllCombos(order);
+            foreach (List<int> combo in combos)
+            {
+                Sentence set = new Sentence(null);
+                foreach (int index in order)
+                {
+                    set.SubSentences.Add(allSentences.SubSentences[index]);
+                    set.Joins.Add(new Operator("&&"));
+                }
+                set.Joins.RemoveAt(set.Joins.Count - 1);
+                if (partialMeet(set, newSentence))
+                {
+                    partialMeetOptions.Add(set);
+                }
+            }
+        return partialMeetOptions;
+    }
+    private Sentence makeBBSet()
+    {
+        Sentence evalSent = new Sentence(null);
+        foreach (Sentence sent in kBase)
+        {
+            if (sent.SubSentences[0].GetType() == typeof(Proposition))
+            {
+                evalSent.SubSentences.Add(sent);
+                evalSent.Joins.Add(new Operator("&&"));
+            }
+            else if (sent.Joins[0].Op == "&&")
+            {
+                foreach (Sentence clause in sent.SubSentences)
+                {
+                    evalSent.SubSentences.Add(clause);
+                    evalSent.Joins.Add(new Operator("&&"));
+                }
+            }
+            else
+            {
+                evalSent.SubSentences.Add(sent);
+                evalSent.Joins.Add(new Operator("&&"));
+            }
+        }
+        evalSent.Joins.RemoveAt(evalSent.Joins.Count-1);
+        return evalSent;
+    }
+
+
+    private bool partialMeet(Sentence set, Sentence newSentence)
+    {
+        Sentence clauseWithNewSent = new Sentence(null);
+        clauseWithNewSent.SubSentences.Add(set);
+        clauseWithNewSent.SubSentences.Add(newSentence);
+        clauseWithNewSent.Joins.Add(new Operator("&&"));
+        clauseWithNewSent.simplfy();
+        if (clauseWithNewSent.printString() == "F")
+        {
+            return false;
+        }
+        return true;
+    }
     public Sentence ASK(){
         return null;
     }
@@ -45,11 +146,9 @@ public class BeliefBase{
             return true;
         }
         // if there are any new variables in the new sentence
-        kBase.Add(newSentence);
-        truthTable.GenerateTable(kBase);
-        kBase.Remove(newSentence);
+        truthTable.GenerateTable(kBase, newSentence);
         kProps = truthTable.InvovledProps;
-        List<bool[]> criticalVals = truthTable.valuesToMatch();
+        List<bool[]> criticalVals = truthTable.valuesToMatch(true);
         for (int i = 0; i < criticalVals.Count; i++)
         {
             GlobalProps.setPropositions(criticalVals[i], kProps);
@@ -57,6 +156,10 @@ public class BeliefBase{
             {
                 return false;
             }
+        }
+        if (criticalVals.Count == 0)
+        {
+            return false;
         }
         return true;
     }

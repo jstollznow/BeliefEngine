@@ -16,11 +16,11 @@ public class TruthTable
 
     }
     
-    public void GenerateTable(List<Sentence> sentences)
+    public void GenerateTable(List<Sentence> sentences, Sentence newSentence = null)
     {
         if (sentences.Count != 0)
         {
-            updateInvolvedProps(sentences);
+            updateInvolvedProps(sentences, newSentence);
             List<bool[]> boolValues = new List<bool[]>();
             boolValues = generateBoolValues(InvovledProps.Count);
             int rows = boolValues.Count;
@@ -41,7 +41,7 @@ public class TruthTable
         }
     }
 
-    public List<bool[]> valuesToMatch()
+    public List<bool[]> valuesToMatch(bool value)
     {
         List<bool[]> criticalValues = new List<bool[]>();
         for (int row = 0; row < table.GetLength(0); row++)
@@ -49,7 +49,7 @@ public class TruthTable
             bool criticalRow = true;
             for (int i = 0; i < table.GetLength(1); i++)
             {
-                if (table[row,i].Value == false)
+                if (table[row,i].Value != value)
                 {
                     criticalRow = false;
                     break;
@@ -58,6 +58,64 @@ public class TruthTable
             if (criticalRow)
             {
                 criticalValues.Add(table[row,0].PropValues);
+            }
+        }
+        return criticalValues;
+    }
+    
+    public int sentenceCheck ()
+    {
+        bool taut = true;
+        bool falsum = true;
+        List<bool[]> criticalValues = new List<bool[]>();
+        for (int col = 0; col < table.GetLength(1); col++)
+        {
+            for (int row = 0; row < table.GetLength(0); row++)
+            {
+                if (table[row, col].Value == false)
+                {
+                    taut = false;
+                }
+                else 
+                {
+                    falsum = false;
+                }
+            }
+        }
+        if (!taut && !falsum)
+        {
+            return -1;
+        }
+        else if (taut)
+        {
+            return 1;
+        }
+        else if (falsum)
+        {
+            return 0;
+        }
+        else
+        {
+            return -2;
+        }
+    }
+    public List<bool[]> sentTaut()
+    {
+        List<bool[]> criticalValues = new List<bool[]>();
+        for (int row = 0; row < table.GetLength(0); row++)
+        {
+            bool criticalRow = true;
+            for (int i = 0; i < table.GetLength(1); i++)
+            {
+                if (table[row, i].Value == false)
+                {
+                    criticalRow = false;
+                    break;
+                }
+            }
+            if (criticalRow)
+            {
+                criticalValues.Add(table[row, 0].PropValues);
             }
         }
         return criticalValues;
@@ -119,19 +177,15 @@ public class TruthTable
             }
             values.Add(newEntry);
         }
-        // for (int i = 0; i < values.Count; i++)
-        // {
-        //     for (int j = 0; j < numProps; j++)
-        //     {
-        //         Console.Write(values[i][j] + " ");
-        //     }
-        //     Console.Write(Environment.NewLine);
-        // }
         return values;
     }
 
-    private void updateInvolvedProps(List<Sentence> sentences)
+    private void updateInvolvedProps(List<Sentence> sentences, Sentence newSentence)
     {
+        if (newSentence != null)
+        {
+            sentences.Add(newSentence);
+        }
         for (int i = 0; i < sentences.Count; i++)
         {
             // for each proposition in each sentence
@@ -144,6 +198,10 @@ public class TruthTable
                     InvovledProps.Add(sentences[i].PropsInSentence[j]);
                 }
             }
+        }
+        if (newSentence != null)
+        {
+            sentences.Remove(newSentence);
         }
     }
 }
