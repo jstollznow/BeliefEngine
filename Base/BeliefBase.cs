@@ -44,7 +44,10 @@ public class BeliefBase{
         {
             return true;
         }
+        // if there are any new variables in the new sentence
+        kBase.Add(newSentence);
         truthTable.GenerateTable(kBase);
+        kBase.Remove(newSentence);
         kProps = truthTable.InvovledProps;
         List<bool[]> criticalVals = truthTable.valuesToMatch();
         for (int i = 0; i < criticalVals.Count; i++)

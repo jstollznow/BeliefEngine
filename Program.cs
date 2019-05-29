@@ -14,7 +14,7 @@ namespace BeliefEngine
             "Welcome to the Belief Revision Engine! How may I help you?" + 
             Environment.NewLine);
             string[] options = {"Print belief base",
-            "Add sentence to belief base", "Entailment" ,"Exit"};
+            "Add sentence to belief base", "Entailment (Truth Tables)", "Entailment (Resolution)" ,"Exit"};
             props = new List<Proposition>();
             while(true){
                 switch(menuOption(options))
@@ -54,6 +54,20 @@ namespace BeliefEngine
                             Console.WriteLine("The sentence does not entail the belief base.");
                         }
                     break;
+                    case 4:
+                        Console.WriteLine("Please enter a logic sentence: ");
+                        string inputLine = Console.ReadLine();
+                        Sentence entailSentRes = new Sentence(inputLine);
+                        //Check if a propositional sentence entails the KB
+                        if (ME.checkEntailment(entailSentRes))
+                        {
+                            Console.WriteLine("The sentence entails the belief base");
+                        }
+                        else
+                        {
+                            Console.WriteLine("The sentence does not entail the belief base.");
+                        }
+                        break;
                     default:
                         return;
                 };
