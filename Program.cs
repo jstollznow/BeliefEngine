@@ -35,7 +35,7 @@ namespace BeliefEngine
                                 //simplify sentence to CNF and add to KB
                                 Console.WriteLine(logicSent.printString());
                                 logicSent.simplfy();
-                                Console.WriteLine(logicSent.printString());
+                                // Console.WriteLine(logicSent.printString());
                                 ME.TELL(logicSent);
                             }
                         }

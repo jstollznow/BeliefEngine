@@ -18,6 +18,8 @@ public class BeliefBase{
     /** Tell function: takes a user input and adds it to the knowledge base */
     public void TELL(Sentence newSentence){
         //Check to see if the sentence has not already been added to the knowledge base
+        // need to fix somehow 
+        // Later
         bool alreadyExists = false;
         foreach (var sentence in kBase) {
             if (sentence.printString() == newSentence.printString()) {

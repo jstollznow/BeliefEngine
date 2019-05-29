@@ -94,7 +94,6 @@ public class Sentence
                                 }
                             }
                             break;
-                        // still need to manage negation!
                         case '~':
                             // not
                             i = negCheck(i);
@@ -203,7 +202,6 @@ public class Sentence
             joins = sent.joins;
             subSentences = sent.subSentences;
             this.Not = !(PropLogicRules.biconditional(this.Not, sent.Not));
-            // this.hasBrackets = (PropLogicRules.OR(this.hasBrackets, sent.hasBrackets));
         }
     }
     private int operatorCheck(int i)
@@ -363,10 +361,12 @@ public class Sentence
         Console.WriteLine("After dist:" + printString());
         bracketLoop();
         Console.WriteLine("After brackets:" + printString());
-        shorteningLoop();
+        logicLoop();
         Console.WriteLine("After logic:" + printString());
         knownLoop();
-        // Console.WriteLine("After knowns:" + printString());
+        // pushSubSentence();
+        // shorteningLoop();
+        Console.WriteLine("After knowns:" + printString());
     }
     private void bicondLoop()
     {
@@ -453,17 +453,17 @@ public class Sentence
         }
     }
 
-    private void shorteningLoop()
+    private void logicLoop()
     {
         foreach (Sentence sub in subSentences)
         {
-            sub.shorteningLoop();
+            sub.logicLoop();
         }
-        applyBasicLogic();
-        // foreach (Sentence sub in subSentences)
-        // {
-        //     sub.shorteningLoop();
-        // }
+
+        if (this.GetType() != typeof(Proposition))
+        {
+            applyBasicLogic();
+        }
     }
     private void knownLoop()
     {
@@ -471,13 +471,19 @@ public class Sentence
         {
             sub.knownLoop();
         }
-        applyKnowns();
-        // if (joins.Count >= 1)
-        // {
-        // }
-        foreach (Sentence sub in subSentences)
+        bool noAction = false;
+        while (!noAction)
         {
-            sub.knownLoop();
+            if (this.GetType() != typeof(Proposition) &&
+        this.GetType() != typeof(Tautology) &&
+        this.GetType() != typeof(Falsum))
+            {
+                noAction = applyKnowns();
+            }
+            else 
+            {
+                noAction = true;
+            }
         }
     }
     private void bracketLoop()
@@ -490,10 +496,6 @@ public class Sentence
         {
             fixBrackets();
         }
-        // foreach (Sentence sub in subSentences)
-        // {
-        //     sub.knownLoop();
-        // }
     }
     private void cycle()
     {
@@ -576,12 +578,6 @@ public class Sentence
         }
         return true;
     }
-
-    // andOverOr
-    // distributivity("||","&&");
-
-    // orOverAnd
-    // distributivity("&&","||");
     private bool distributivity(string op, string overOp)
     {
         // Console.WriteLine("Before: " + printString());
@@ -654,6 +650,8 @@ public class Sentence
                         // hasBrackets = false;
                         if (checkOp == "or")
                         {
+                            subSentences.Clear();
+                            joins.Clear();
                             subSentences.Add(new Tautology(this));
                         }
                         else
@@ -693,6 +691,8 @@ public class Sentence
                                 // hasBrackets = false;
                                 if (checkOp == "or")
                                 {
+                                    subSentences.Clear();
+                                    joins.Clear();
                                     subSentences.Add(new Tautology(this));
                                 }
                                 else
@@ -717,68 +717,32 @@ public class Sentence
     {
         for (int i = 0; i < subSentences.Count; i++)
         {
-            if (subSentences[i].GetType() == typeof(Tautology))
+            if (subSentences[i].subSentences.Count == 1)
             {
-                // if (joins.Count == 0)
-                // {
-                //     if (parent != null)
-                //     {
-                //         parent.subSentences.Add(subSentences[i]);
-                //         parent.subSentences.Remove(this);
-                //         if (parent.parent != null)
-                //         {
-                //             if (parent.subSentences.Count == 1)
-                //             {
-                //                 parent.parent.subSentences.Add(subSentences[i]);
-                //                 parent.parent.subSentences.Remove(this.parent);
-                //             }
-                //         }
-                //     }
-                   
-                // }
-                // else
-                // {
+                if (subSentences[i].subSentences[0].GetType() == typeof(Tautology))
+                {
                     string checkOp = joins[0].OpName;
-                    joins.RemoveAt(0);
+                    // joins.RemoveAt(0);
                     hasBrackets = false;
                     if (checkOp == "and")
                     // T and x
                     {
                         subSentences.RemoveAt(i);
+                        joins.RemoveAt(0);
                     }
                     else
                     // T or x
                     {
-                        // subSentences.Clear();
-                        // joins.Clear();
-                        parent.subSentences.Add(new Tautology(parent));
-                        parent.subSentences.Remove(this);
+                        subSentences.Clear();
+                        joins.Clear();
+                        
                         // this.parent = null;
                     }
-                // }
-                return false;
-                
-            }
-            else if (subSentences[i].GetType() == typeof(Falsum))
-            {
-                // if (joins.Count == 0)
-                // {
-                //     if (parent != null)
-                //     {
-                //         parent.subSentences.Add(subSentences[i]);
-                //         parent.subSentences.Remove(this);
-                //         if (parent.parent != null)
-                //         {
-                //             if (parent.subSentences.Count == 1)
-                //             {
-                //                 parent.parent.subSentences.Add(subSentences[i]);
-                //                 parent.parent.subSentences.Remove(this);
-                //             }
-                //         }
-                //     }
-                // }
-                // else
-                // {
+                    return false;
+                    
+                }
+                else if (subSentences[i].subSentences[0].GetType() == typeof(Falsum))
+                {
                     string checkOp = joins[0].OpName;
                     joins.RemoveAt(0);
                     hasBrackets = false;
@@ -792,19 +756,12 @@ public class Sentence
                     {
                         subSentences.Clear();
                         joins.Clear();
-                        parent.subSentences.Add(new Falsum(parent));
-                        parent.subSentences.Remove(this);
-                        this.parent = null;
                     }
-                // }
-                return false;
+                    return false;
+                }
+                
             }
         }
-        // if (this.GetType() == typeof(Tautology))
-        // {
-        //     parent.subSentences.Add(subSentences[i]);
-        //     parent.subSentences.Remove(this);
-        // }
         return true;
     }
     private void fixBrackets()
