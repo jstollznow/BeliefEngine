@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+/* Code taken from stack over flow :
+https://stackoverflow.com/questions/7802822/all-possible-combinations-of-a-list-of-values */
 public static class Combos{
     // Recursive
     public static List<List<T>> GetAllCombos<T>(List<T> list)
