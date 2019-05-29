@@ -46,6 +46,7 @@ public class BeliefBase{
         }
         // if there are any new variables in the new sentence
         kBase.Add(newSentence);
+        //generates truth table and checks entailment 
         truthTable.GenerateTable(kBase);
         kBase.Remove(newSentence);
         kProps = truthTable.InvovledProps;

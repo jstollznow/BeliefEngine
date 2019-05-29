@@ -245,7 +245,7 @@ public class Sentence
         i = orginalPos;
         return i;
     }
-
+    
     private int negCheck(int i)
     //Check is a proposition is negative
     {
@@ -278,6 +278,7 @@ public class Sentence
         i = orginalPos;
         return i;
     }
+    /* Checks for a proposition and returns the position */
     private int propCheck(int i)
     {
         int orginalPos = i;
@@ -368,6 +369,8 @@ public class Sentence
         // shorteningLoop();
         Console.WriteLine("After knowns:" + printString());
     }
+    
+    /*Main biconditional elimination function */
     private void bicondLoop()
     {
         foreach (Sentence sub in subSentences)
@@ -387,6 +390,7 @@ public class Sentence
             }
         }
     }
+    /*Main Implication elimination function */
     private void impLoop()
     {
         foreach (Sentence sub in subSentences)
@@ -406,19 +410,22 @@ public class Sentence
             }
         }
     }
-
+    /* Main De Morgan's function */
     private void deMorganLoop()
     {
+        //checks if De Morgan's needs to be applied (negation outside a bracket)
         if (applyDeMorgans())
         // push negatives inwards
         {
             DeMorgans();
         }
+        //recursively apply de morgans to each subsentence
         foreach (Sentence sub in subSentences)
         {
             sub.deMorganLoop();
         }
     }
+    /* Distributes and over or */
     private void distLoop()
     {
         foreach (Sentence sub in subSentences)
@@ -437,6 +444,7 @@ public class Sentence
                 {
                     noChange = distributivity("||","&&");
                 }
+                //if first operation does not change, flip and run again
                 if(noChange)
                 {
                     commutativity();
@@ -447,12 +455,14 @@ public class Sentence
                 }
             }
         }
+        //recursively apply distribution to each subsentence
         foreach (Sentence sub in subSentences)
         {
             sub.distLoop();
         }
     }
 
+    /*APply main logic loop to all sentences and subsentences */
     private void logicLoop()
     {
         foreach (Sentence sub in subSentences)
@@ -465,6 +475,7 @@ public class Sentence
             applyBasicLogic();
         }
     }
+    //Determines if a setence is a tautology or falsum 
     private void knownLoop()
     {
         foreach (Sentence sub in subSentences)
@@ -486,6 +497,7 @@ public class Sentence
             }
         }
     }
+    //Checks to see if brackets 
     private void bracketLoop()
     {
         foreach (Sentence sub in subSentences)
@@ -497,6 +509,7 @@ public class Sentence
             fixBrackets();
         }
     }
+    //recursively apply simplification to all subsentences
     private void cycle()
     {
         for (int sIndex = 0; sIndex < subSentences.Count; sIndex++)
@@ -504,6 +517,7 @@ public class Sentence
             subSentences[sIndex].simplfy();
         }
     }
+    //Eliminates implication operators
     private bool convertImplication()
     {
         for (int impIndex = 0; impIndex < joins.Count; impIndex++)
@@ -518,13 +532,16 @@ public class Sentence
         }
         return true;
     }
+    //De Morgans function
     private void DeMorgans()
     {
+        //Applies negation
         not = flip(not);
         hasBrackets = (parent != null);
         int index;
         for (index = 0; index < joins.Count; index++)
         {
+            //Switch operator
             subSentences[index].not = flip(subSentences[index].not);
             if (joins[index].OpName == "or")
             {
@@ -556,6 +573,7 @@ public class Sentence
             return true;
         }
     }
+    //Eliminates bi-conditional operators
     private bool convertBiconditional()
     {
         for (int biIndex = 0; biIndex < joins.Count; biIndex++)
@@ -578,6 +596,7 @@ public class Sentence
         }
         return true;
     }
+    //Distributes AND over OR 
     private bool distributivity(string op, string overOp)
     {
         // Console.WriteLine("Before: " + printString());
@@ -617,6 +636,8 @@ public class Sentence
         return true;
     }
     // flip arguements if join is OR or AND
+
+    /* Main function to simplify sentences into CNF form */
     private bool applyBasicLogic()
     // assumes all joins in the same sentence are the same operators, else they are seperated by brackets
     {
@@ -664,6 +685,7 @@ public class Sentence
                     }
                     else
                     {
+                        //CNF form 
                         if (subSentences[i].applyDeMorgans())
                         {
                             subSentences[i].DeMorgans();
@@ -713,6 +735,7 @@ public class Sentence
         }
         return true;
     }
+    /*If a proposition is only true or only false, remove the sentence */
     private bool applyKnowns()
     {
         for (int i = 0; i < subSentences.Count; i++)
@@ -764,6 +787,7 @@ public class Sentence
         }
         return true;
     }
+    /*Removes unneccesary brackets */
     private void fixBrackets()
     {
         if (joins.Count >= 0)
@@ -791,6 +815,7 @@ public class Sentence
             }
         }
     }
+    //Flips the position of propositions
     private void commutativity()
     {
         // Console.WriteLine("Before: " + printString());
@@ -805,6 +830,7 @@ public class Sentence
         }
         // Console.WriteLine("After: " + printString());
     }
+    //Determines if De Morgans can be applied to a senence
     private bool applyDeMorgans()
     {
         if (not && subSentences.Count > 1)
