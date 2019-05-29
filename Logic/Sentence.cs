@@ -859,8 +859,11 @@ public class Sentence
 
     private bool applyTruthTable()
     {
-        
-        TruthTable test = new TruthTable(new List<Sentence>{this});
+        pushPropsInSentence();
+        List<Sentence> thisSent = new  List<Sentence>();
+        thisSent.Add(this);
+        TruthTable test = new TruthTable(thisSent);
+        // test.GenerateTable()
         switch(test.sentenceCheck())
         {
             case 0:

@@ -14,7 +14,7 @@ namespace BeliefEngine
             "Welcome to the Belief Revision Engine! How may I help you?" + 
             Environment.NewLine);
             string[] options = {"Print belief base",
-            "Add sentence to belief base", "Entailment (Truth Tables)", "Entailment (Resolution)" ,"Exit"};
+            "Add sentence to belief base (Partial Meet Contraction)", "Entailment (Truth Tables)", "Exit"};
             props = new List<Proposition>();
             while(true){
                 switch(menuOption(options))
@@ -33,10 +33,9 @@ namespace BeliefEngine
                             if (logicSent.IsValid)
                             {
                                 //simplify sentence to CNF and add to KB
-                                Console.WriteLine(logicSent.printString());
                                 logicSent.simplfy();
-                                // Console.WriteLine(logicSent.printString());
                                 ME.TELL(logicSent);
+                                ME.printBase();
                             }
                         }
                     break;
@@ -47,11 +46,11 @@ namespace BeliefEngine
                         //Check if a propositional sentence entails the KB
                         if (ME.checkEntailment(entailSent))
                         {
-                            Console.WriteLine("The sentence entails the belief base");
+                            Console.WriteLine("The sentence entails the belief base" + Environment.NewLine);
                         }
                         else
                         {
-                            Console.WriteLine("The sentence does not entail the belief base.");
+                            Console.WriteLine("The sentence does not entail the belief base." + Environment.NewLine);
                         }
                     break;
                     case 4:

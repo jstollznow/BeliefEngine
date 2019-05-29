@@ -49,14 +49,52 @@ public class BeliefBase{
         {
             Console.WriteLine("Your sentence is not entailed by the belief base" + Environment.NewLine);
             // adjustBeliefBase(newSentence);
-            List<Sentence> Options = adjustBeliefBase(newSentence);
+            List<Sentence> Options = new List<Sentence>();
+            Options = adjustBeliefBase(newSentence);
+            Options.Add(newSentence);
             int count = 1;
             Console.WriteLine("Here are your options: ");
             foreach (Sentence item in Options)
             {
-                Console.WriteLine(count + " " + item.printString());
+                Console.WriteLine(count + ". " + item.printString());
+                count++;
             }
-            // Console.Write(printBase());
+
+            string val;
+            int option = 0;
+            bool valid = false;
+            while (!valid)
+            {
+                Console.WriteLine("Please select a belief set: ");
+                val = Console.ReadLine();
+                valid = int.TryParse(val, out option);
+                if (valid)
+                {
+                    valid = ((Options.Count) >= option) && (option > 0);
+                }
+            }
+            kBase.Clear();
+            distributeClauses(Options[option - 1]);
+            listSentences();
+        }
+    }
+    private void distributeClauses(Sentence set)
+    {
+        kBase.Clear();
+        if (set.Joins.Count == 0)
+        {
+            kBase.Add(set);
+        }
+        else if (set.Joins[0].Op == "&&")
+        {
+            foreach (Sentence sub in set.SubSentences)
+            {
+                kBase.Add(sub);
+            }
+        }
+        else
+        {
+            kBase.Add(set);
         }
     }
     public string printBase()
@@ -78,10 +116,11 @@ public class BeliefBase{
                 order.Add(i);
             }
             List<List<int>> combos = Combos.GetAllCombos(order);
+            combos.Reverse();
             foreach (List<int> combo in combos)
             {
                 Sentence set = new Sentence(null);
-                foreach (int index in order)
+                foreach (int index in combo)
                 {
                     set.SubSentences.Add(allSentences.SubSentences[index]);
                     set.Joins.Add(new Operator("&&"));
@@ -89,6 +128,8 @@ public class BeliefBase{
                 set.Joins.RemoveAt(set.Joins.Count - 1);
                 if (partialMeet(set, newSentence))
                 {
+                    set.SubSentences.Add(newSentence);
+                    set.Joins.Add(new Operator("&&"));
                     partialMeetOptions.Add(set);
                 }
             }
