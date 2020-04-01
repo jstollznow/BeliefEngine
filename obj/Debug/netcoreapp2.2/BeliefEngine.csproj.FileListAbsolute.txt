@@ -9,3 +9,13 @@ c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfoInp
 c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfo.cs
 c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.dll
 c:\Users\vanes\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.pdb
+C:\Users\HP\Documents\GitHub\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.deps.json
+C:\Users\HP\Documents\GitHub\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.runtimeconfig.json
+C:\Users\HP\Documents\GitHub\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.runtimeconfig.dev.json
+C:\Users\HP\Documents\GitHub\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.dll
+C:\Users\HP\Documents\GitHub\BeliefEngine\bin\Debug\netcoreapp2.2\BeliefEngine.pdb
+C:\Users\HP\Documents\GitHub\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.csprojAssemblyReference.cache
+C:\Users\HP\Documents\GitHub\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfoInputs.cache
+C:\Users\HP\Documents\GitHub\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.AssemblyInfo.cs
+C:\Users\HP\Documents\GitHub\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.dll
+C:\Users\HP\Documents\GitHub\BeliefEngine\obj\Debug\netcoreapp2.2\BeliefEngine.pdb

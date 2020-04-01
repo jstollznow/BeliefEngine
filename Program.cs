@@ -54,21 +54,9 @@ namespace BeliefEngine
                         }
                     break;
                     case 4:
-                        Console.WriteLine("Please enter a logic sentence: ");
-                        string inputLine = Console.ReadLine();
-                        Sentence entailSentRes = new Sentence(inputLine);
-                        //Check if a propositional sentence entails the KB
-                        if (ME.checkEntailment(entailSentRes))
-                        {
-                            Console.WriteLine("The sentence entails the belief base");
-                        }
-                        else
-                        {
-                            Console.WriteLine("The sentence does not entail the belief base.");
-                        }
-                        break;
-                    default:
                         return;
+                    default:
+                        break;
                 };
             }
 
